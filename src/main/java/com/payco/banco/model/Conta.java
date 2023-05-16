@@ -17,12 +17,18 @@ public class Conta {
 	private String titular;
 	private int numeroConta;
 	private float saldo;
+	
+	public Conta() {
+		
+	}
+
 	public Conta(Long id, String titular, int numeroConta, float saldo) {
 		this.id = id;
 		this.titular = titular;
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
 	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -47,7 +53,5 @@ public class Conta {
 	public void setSaldo(float saldo) {
 		this.saldo = saldo;
 	}
-	
-	
 	
 }
