@@ -4,8 +4,8 @@ public class ContaCorrente extends Conta{
 
 	private float limiteConta;
 
-	public ContaCorrente(Long id, String titular, int numeroConta, float saldo, float limiteConta) {
-		super(id, titular, numeroConta, saldo);
+	public ContaCorrente(Long id, String titular, int cpf, int numeroConta, float saldo, float limiteConta) {
+		super(id, titular, cpf, numeroConta, saldo);
 		this.limiteConta = limiteConta;
 	}
 
@@ -17,9 +17,9 @@ public class ContaCorrente extends Conta{
 		this.limiteConta = limiteConta;
 	}
 	
-	@Override
+	/*@Override
 	public String toString() {  
-		return "Minha conta: \nId: " + super.getId() + "\nTitular: " + super.getTitular() + "\nNumero Conta: " + super.getNumeroConta() + "\nSaldo: R$" + super.getSaldo() + "\nLimite: R$" + this.limiteConta;
-	}
+		return "Minha conta: \nId: " + super.getId() + "\nTitular: " + super.getTitular() + "\nCPF: " + super.getCpf() + "\nNumero Conta: " + super.getNumeroConta() + "\nSaldo: R$" + super.getSaldo() + "\nLimite: R$" + this.limiteConta;
+	}*/
 	
 }

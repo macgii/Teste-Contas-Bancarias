@@ -15,6 +15,7 @@ public class Conta {
 	private Long id;
 	
 	private String titular;
+	private int cpf;
 	private int numeroConta;
 	private float saldo;
 	
@@ -22,36 +23,52 @@ public class Conta {
 		
 	}
 
-	public Conta(Long id, String titular, int numeroConta, float saldo) {
+	public Conta(Long id, String titular, int cpf, int numeroConta, float saldo) {
 		this.id = id;
 		this.titular = titular;
+		this.cpf = cpf;
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getTitular() {
 		return titular;
 	}
+
 	public void setTitular(String titular) {
 		this.titular = titular;
 	}
+
+	public int getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(int cpf) {
+		this.cpf = cpf;
+	}
+
 	public int getNumeroConta() {
 		return numeroConta;
 	}
+
 	public void setNumeroConta(int numeroConta) {
 		this.numeroConta = numeroConta;
 	}
+
 	public float getSaldo() {
 		return saldo;
 	}
+
 	public void setSaldo(float saldo) {
 		this.saldo = saldo;
 	}
-	
+
 }
