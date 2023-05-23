@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name ="tb_contas")
@@ -14,9 +16,19 @@ public class Conta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank
+	@Size(min = 2)
 	private String titular;
+	
+	@NotBlank
+	@Size(min = 11, max = 11)
 	private int cpf;
+	
+	@NotBlank
+	@Size(min = 8, max = 8)
 	private int numeroConta;
+	
+	@NotBlank
 	private float saldo;
 	
 	public Conta() {
