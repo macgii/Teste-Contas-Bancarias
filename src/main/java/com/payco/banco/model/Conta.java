@@ -1,12 +1,15 @@
 package com.payco.banco.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name ="tb_contas")
@@ -20,29 +23,34 @@ public class Conta {
 	@Size(min = 2)
 	private String titular;
 	
-	@NotBlank
-	@Size(min = 11, max = 11)
-	private int cpf;
+    @Min(10000000000L)
+    @Max(99999999999L)
+	@NotNull
+	private long cpf;
 	
-	@NotBlank
-	@Size(min = 8, max = 8)
+    @Min(10000000)
+    @Max(99999999)
+	@NotNull
 	private int numeroConta;
 	
-	@NotBlank
+    @Min(0)
 	private float saldo;
 	
 	public Conta() {
 		
 	}
-
-	public Conta(Long id, String titular, int cpf, int numeroConta, float saldo) {
+	
+	public Conta(Long id, @NotBlank @Size(min = 2) String titular,
+			@Min(10000000000L) @Max(99999999999L) @NotNull long cpf,
+			@Min(10000000) @Max(99999999) @NotNull int numeroConta, @Min(0) float saldo) {
+		super();
 		this.id = id;
 		this.titular = titular;
 		this.cpf = cpf;
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -59,11 +67,11 @@ public class Conta {
 		this.titular = titular;
 	}
 
-	public int getCpf() {
+	public long getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(int cpf) {
+	public void setCpf(long cpf) {
 		this.cpf = cpf;
 	}
 
@@ -81,6 +89,11 @@ public class Conta {
 
 	public void setSaldo(float saldo) {
 		this.saldo = saldo;
+	}
+	
+	@Override
+	public String toString() {  
+		return "(Id: " + this.getId() + ") (Titular: " + this.getTitular() + ") (CPF: " + this.getCpf() + ") (Numero Conta: " + this.getNumeroConta() + ") (Saldo: R$" + this.getSaldo() + ")";
 	}
 
 }
