@@ -4,16 +4,25 @@ networks:
   aw-networks:
     driver: bridge
 
+
 volumes:
   prometheus_data:
+  grafana_data:
+
 
 services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
-      - ./prometheus/prometheus_data:/prometheus
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml 
+      - ./prometheus_data:/prometheus
     networks:
       - aw-networks
     ports:
       - 9090:9090
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - aw-networks
+    ports:
+      - 3000:3000
