@@ -14,8 +14,8 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml 
-      - ./prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
+      - ./prometheus/prometheus_data:/prometheus
     networks:
       - aw-networks
     ports:
