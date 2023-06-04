@@ -1,5 +1,6 @@
 package com.payco.banco.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,12 +26,12 @@ public class Conta {
 	
     @Min(10000000000L)
     @Max(99999999999L)
-	@NotNull
+    @Column(name = "cpf", unique = true)
 	private long cpf;
 	
     @Min(10000000)
     @Max(99999999)
-	@NotNull
+    @Column(name = "numeroConta", unique = true)
 	private int numeroConta;
 	
     @Min(0)
