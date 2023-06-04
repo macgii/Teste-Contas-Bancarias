@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 networks:
   aw-networks:
@@ -15,14 +15,44 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
-      - ./prometheus/prometheus_data:/prometheus
+      - prometheus_data:/prometheus
     networks:
       - aw-networks
     ports:
       - 9090:9090
+      
   grafana:
     image: grafana/grafana:latest
     networks:
       - aw-networks
     ports:
       - 3000:3000
+      
+  mysql:
+    image: mysql:8.0.33
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+
+  app:
+    image: api-contas-bancarias
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_JPA_HIBERNATE_DDL-AUTO=update
+      - SPRING_JPA_DATABASE=mysql
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/database?createDatabaseIfNotExist=true&serverTimezone=America/Sao_Paulo&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_SHOW-SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_JACKSON_DATE-FORMAT=yyyy-MM-dd HH:mm:ss
+      - SPRING_JACKSON_TIME-ZONE=Brazil/East
