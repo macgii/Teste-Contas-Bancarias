@@ -8,8 +8,8 @@ Certifique-se de que você tenha o seguinte instalado em seu sistema:
 ***
 ## Passo 1: Clonar o Repositório
 
-Abra um terminal ou prompt de comando.
-Navegue até o diretório onde você deseja clonar o repositório.
+Abra um terminal ou prompt de comando. <br />
+Navegue até o diretório onde você deseja clonar o repositório. <br />
 Execute o seguinte comando para clonar o repositório:
 
 ```
@@ -41,8 +41,8 @@ Aguarde até que o Docker Compose inicie os contêineres e imprima logs na tela.
 ***
 ## Passo 4: Requisições:
 
-Faça o download e Importe a Collection do Postman: [Download](https://www.example.com/)
-
+Faça o download e Importe a Collection do Postman: <br />
+[Download](https://github.com/macgii/Teste-Contas-Bancarias/blob/main/collection/banco.postman_collection.json) <br />
 Abra o Postman. <br />
-Vá em "File" -> "Import" e selecione o arquivo da collection.
+Vá em "File" -> "Import" e selecione o arquivo da collection. <br />
 Explore a collection importada para fazer requisições.
