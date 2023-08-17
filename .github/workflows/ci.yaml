@@ -1,5 +1,7 @@
 version: 2  # Versão da configuração CI
 
+on: [push]
+
 jobs:
   build:
     name: Build and Test Java Spring Boot App
@@ -15,10 +17,3 @@ jobs:
         run: mvn clean install  # Comando para construir e testar o projeto
         
   # Adicione mais trabalhos aqui, como implantação, integração, etc.
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      # Adicione outros trabalhos ao fluxo de trabalho, se necessário
