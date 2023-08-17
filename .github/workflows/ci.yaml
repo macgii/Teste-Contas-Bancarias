@@ -1,5 +1,4 @@
-version: 2  # Versão da configuração CI
-
+name: ci-api-contas-bancarias
 on: [push]
 
 jobs:
