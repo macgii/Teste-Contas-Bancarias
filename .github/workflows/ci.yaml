@@ -1,18 +1,26 @@
-name: ci-api-contas-bancarias
-on: [push]
+name: ci-api-teste-contas-bancarias
+
+on:
+  push:
+    branches:
+      - develop  # Defina a branch na qual deseja acionar a CI
 
 jobs:
   build:
     name: Build and Test Java Spring Boot App
-    agent:
-      docker:
-        - image: maven:3.8-jdk-17  # Imagem Docker com Maven e JDK 17 pré-instalados
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v2  # Obtém o código-fonte do repositório
         
-      - name: Build and Test
-        run: mvn clean install  # Comando para construir e testar o projeto
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17  # Versão do JDK a ser usada
         
-  # Adicione mais trabalhos aqui, como implantação, integração, etc.
+      - name: Build with Maven
+        run: mvn clean install  # Comando para construir o projeto
+        
+      - name: Run Tests
+        run: mvn test  # Comando para executar os testes
