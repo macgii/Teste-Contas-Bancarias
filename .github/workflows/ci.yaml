@@ -32,7 +32,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean install   
       - name: Run Tests
-        run: mvn test  # Comando para executar os testes
+        run: mvn test  # Comando para executar os testes  
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -45,6 +45,8 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Integrate with sonarcloud
+        run: mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.projectKey=macgii_Teste-Contas-Bancarias -Dsonar.organization=macgii -Dsonar.host.url=https://sonarcloud.io
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # Needed to get PR information, if any
