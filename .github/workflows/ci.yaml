@@ -19,7 +19,7 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
-
+        
     steps:
       - uses: actions/checkout@v3
         with:
@@ -42,6 +42,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
