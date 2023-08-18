@@ -30,8 +30,10 @@ jobs:
           java-version: 17  # Versão do JDK a ser usada
           distribution: 'adopt' #Defina a distribuição do JDK que deseja usar
         
-      - name: Build with Maven
+      - name: Build with Maven (clean)
         run: mvn clean 
+        
+      - name: Build with Maven (install)
         run: mvn install  # Comando para construir o projeto
         
       - name: Run Tests
