@@ -36,7 +36,6 @@ jobs:
       - name: Run Tests
         run: mvn test  # Comando para executar os testes
 
-name: Main Workflow
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
