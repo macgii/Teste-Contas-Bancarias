@@ -31,7 +31,7 @@ jobs:
           distribution: 'adopt' #Defina a distribuição do JDK que deseja usar
         
       - name: Build with Maven
-        run: clean install
+        run: mvn clean install
         
       - name: Run Tests
-        run: test  # Comando para executar os testes
+        run: mvn test  # Comando para executar os testes
