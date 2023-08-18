@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.payco</groupId>
 	<artifactId>banco</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>banco</name>
 	<description>Projeto de contas bancárias com Spring Boot</description>
 	<properties>
