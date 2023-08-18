@@ -35,6 +35,3 @@ jobs:
         
       - name: Build with Maven (install)
         run: mvn install  # Comando para construir o projeto
-        
-      - name: Run Tests
-        run: mvn test  # Comando para executar os testes
