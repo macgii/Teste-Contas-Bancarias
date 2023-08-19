@@ -1,14 +1,15 @@
-name: SonarCloud
+name: ci-contas-bancarias
+
 on:
   push:
     branches:
       - develop
   pull_request:
-    types: [opened, synchronize, reopened]  
+    types: [opened, synchronize, reopened]
 
 jobs:
-  mysql:
-    name: MySQL Service
+  build:
+    name: Build
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -19,14 +20,6 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
-    steps:
-      - name: Wait for MySQL to start
-        run: sleep 15
-
-  build:
-    name: Backend Build
-    runs-on: ubuntu-latest
-    needs: mysql
     steps:
       - uses: actions/checkout@v3
         with:
@@ -40,9 +33,18 @@ jobs:
         run: mvn clean install
 
   test:
-    name: Backend Unit Tests
+    name: Tests
     runs-on: ubuntu-latest
     needs: build
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: database
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -54,11 +56,20 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Run Tests
         run: mvn test  # Comando para executar os testes
-        
+
   analysis:
-    name: Analysis(Sonar) and Coverage(Jacoco)
+    name: Analysis and Coverage
     runs-on: ubuntu-latest
     needs: test
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: database
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -85,5 +96,3 @@ jobs:
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias    
