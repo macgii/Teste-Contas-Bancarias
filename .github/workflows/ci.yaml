@@ -6,20 +6,27 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]  
 
-services:
-  mysql:
-    image: mysql:8.0.33
-    env:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: database
-    ports:
-      - 3306:3306
-    options: --health-cmd="mysqladmin ping -h localhost"
-
 jobs:
-  build:
-    name: Build
+  mysql:
+    name: MySQL Service
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: database
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost"
+    steps:
+      - name: Wait for MySQL to start
+        run: sleep 15
+
+  build:
+    name: Backend Build
+    runs-on: ubuntu-latest
+    needs: mysql
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,7 +40,7 @@ jobs:
         run: mvn clean install
 
   test:
-    name: Tests
+    name: Backend Unit Tests
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -47,8 +54,9 @@ jobs:
           distribution: 'zulu' # Alternative distribution options are available.
       - name: Run Tests
         run: mvn test  # Comando para executar os testes
+        
   analysis:
-    name: Analysis and Coverage
+    name: Analysis(Sonar) and Coverage(Jacoco)
     runs-on: ubuntu-latest
     needs: test
     steps:
