@@ -43,10 +43,10 @@ jobs:
 
       - name: Check Coverage
         run: |
-        COVERAGE=${{ steps.coverage.outputs.coverage }}
-        if [ $COVERAGE -ge 80 ]; then
-          echo "Coverage is >= 80%"
-        else
-          echo "Coverage is < 80%. Minimum coverage requirement not met."
-          exit 1
-        fi
+          COVERAGE=${{ steps.coverage.outputs.coverage }}
+          if [ $COVERAGE -ge 80 ]; then
+            echo "Coverage is >= 80%"
+          else
+            echo "Coverage is < 80%. Minimum coverage requirement not met."
+            exit 1
+          fi
