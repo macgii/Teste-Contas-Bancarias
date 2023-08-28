@@ -30,6 +30,7 @@ services:
       
   mysql:
     image: mysql:8.0.33
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=database
@@ -42,6 +43,7 @@ services:
 
   app:
     image: api-contas-bancarias
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
