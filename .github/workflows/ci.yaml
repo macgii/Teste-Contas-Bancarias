@@ -38,8 +38,9 @@ jobs:
 
       - name: Calculate Coverage
         id: coverage
-        run: echo "coverage=$(awk -F\"[=%]\" '/Total/{print $2}' target/site/jacoco/index.html)"
-        shell: bash
+        run: |
+          COVERAGE=$(awk -F"[%=]" '/Total/{print $2}' target/site/jacoco/index.html)
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
 
       - name: Check Coverage
         run: |
