@@ -29,7 +29,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: docker-image
-          path: docker-compose.yaml
 
       - name: Show a List of Running Containers
         run: docker ps
@@ -45,15 +44,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Caminho
-        run: pwd
-
-      - name: Docker Directory /app
-        run: ls -a
-
-      - name: Show a List of All Images
-        run: docker images
-
       - name: Checkout code
         uses: actions/checkout@v3
       
@@ -62,6 +52,9 @@ jobs:
 
       - name: Docker Directory /app
         run: ls -a
+
+      - name: Show a List of All Images
+        run: docker images
 
       - name: Faça o login no Docker Hub (ou outro registro)
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
