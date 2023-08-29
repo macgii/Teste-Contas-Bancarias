@@ -1,10 +1,10 @@
-name: Docker CI/CD
+name: Docker Continuos Delivery
 
 on:
   push:
     branches:
       - feature/deploy-docker
-
+      
 jobs:
   build:
     runs-on: ubuntu-latest
