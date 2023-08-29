@@ -27,7 +27,7 @@ jobs:
       run: docker images
 
     - name: Faça o login no Docker Hub (ou outro registro)
-      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin ${{ secrets.DOCKERHUB_TOKEN }} docker.io
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
 
     - name: Faça o push da imagem para o Docker Hub
       run: docker tag api-contas-bancarias macgii/api-contas-bancarias
