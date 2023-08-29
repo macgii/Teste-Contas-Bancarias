@@ -3,7 +3,7 @@ name: ci-contas-bancarias
 on:
   push:
     branches:
-      - develop
+      - hotfix/test
   pull_request:
     types: [opened, synchronize, reopened]
 
