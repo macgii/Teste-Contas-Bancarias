@@ -30,9 +30,6 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
-      - name: Maven build
-        run: mvn clean install
-
       - name: Build with Maven and run tests
         run: mvn clean verify
 
