@@ -19,16 +19,13 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: 17
-          distribution: 'zulu'
-      - name: Build with Maven
-        run: mvn clean install
 
       - name: Get Current Version
         id: get_version
@@ -39,8 +36,12 @@ jobs:
         id: get_previous_version
         run: |
           git fetch --tags
-          PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
-          echo "::set-output name=previous_version::$PREVIOUS_VERSION"
+          if [ "$(git tag)" ]; then
+            PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
+            echo "::set-output name=previous_version::$PREVIOUS_VERSION"
+          else
+            echo "::set-output name=previous_version::0.0.0"  # Define uma versão padrão
+          fi
 
       - name: Compare Versions and Verify
         run: |
