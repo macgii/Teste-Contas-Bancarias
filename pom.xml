@@ -118,12 +118,12 @@
 				<configuration>
 					<rules>
 						<rule>
-							<element>GROUP</element>
+							<element>PACKAGE</element>
 							<limits>
 								<limit>
 									<counter>LINE</counter>
 									<value>COVEREDRATIO</value>
-									<minimum>0.50</minimum>
+									<minimum>0.90</minimum>
 								</limit>
 							</limits>
 						</rule>
