@@ -1,0 +1,54 @@
+name: Verify Version
+
+on:
+  push:
+    branches:
+      - feature/deploy-docker
+
+jobs:
+  verify_version:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: 11
+
+    - name: Get Current Version
+      id: get_version
+      run: |
+        echo "::set-output name=version::$(grep -oP '<version>\K[^<]+' pom.xml)"
+
+    - name: Get Previous Version
+      id: get_previous_version
+      run: |
+        git fetch --tags
+        PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
+        echo "::set-output name=previous_version::$PREVIOUS_VERSION"
+
+    - name: Compare Versions and Verify
+      run: |
+        CURRENT_VERSION="${{ steps.get_version.outputs.version }}"
+        PREVIOUS_VERSION="${{ steps.get_previous_version.outputs.previous_version }}"
+
+        # Parse major, minor, and patch versions from version strings
+        IFS='.' read -ra CURRENT_VERSION_PARTS <<< "$CURRENT_VERSION"
+        IFS='.' read -ra PREVIOUS_VERSION_PARTS <<< "$PREVIOUS_VERSION"
+
+        # Compare major, minor, and patch versions
+        if [ "${CURRENT_VERSION_PARTS[0]}" -lt "${PREVIOUS_VERSION_PARTS[0]}" ] || \
+           ([ "${CURRENT_VERSION_PARTS[0]}" -eq "${PREVIOUS_VERSION_PARTS[0]}" ] && [ "${CURRENT_VERSION_PARTS[1]}" -lt "${PREVIOUS_VERSION_PARTS[1]}" ]) || \
+           ([ "${CURRENT_VERSION_PARTS[0]}" -eq "${PREVIOUS_VERSION_PARTS[0]}" ] && [ "${CURRENT_VERSION_PARTS[1]}" -eq "${PREVIOUS_VERSION_PARTS[1]}" ] && [ "${CURRENT_VERSION_PARTS[2]}" -le "${PREVIOUS_VERSION_PARTS[2]}" ]); then
+          echo "Nova versão não segue o padrão SemVer: $CURRENT_VERSION (versão anterior: $PREVIOUS_VERSION)"
+          exit 1
+        else
+          echo "Versão válida: $CURRENT_VERSION"
+        fi
+
+    - name: Build Application
+      run: |
+        echo "Construindo a aplicação..."

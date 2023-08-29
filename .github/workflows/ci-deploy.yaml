@@ -3,7 +3,7 @@ name: docker continuos delivery
 on:
   push:
     branches:
-      - feature/deploy-docker
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
