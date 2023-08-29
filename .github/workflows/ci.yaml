@@ -3,7 +3,7 @@ name: ci-contas-bancarias
 on:
   push:
     branches:
-      - bimbinho
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
