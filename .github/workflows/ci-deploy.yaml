@@ -24,6 +24,12 @@ jobs:
 
           # Wait for services to initialize (customize as needed)
           sleep 180
+      
+      - name: Save Docker image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-image
+          path: docker-compose.yaml
 
       - name: Show a List of Running Containers
         run: docker ps
@@ -49,16 +55,22 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          name: artifacts
-          path: api-contas-bancarias
-      
+
       - name: Docker Directory /app
         run: ls -a
 
       - name: Faça o login no Docker Hub (ou outro registro)
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
-      
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: |
+          docker load -i docker-image.tar
+        
       - name: Show a List of All Images
         run: docker images
 
