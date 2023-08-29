@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Docker Directory /app
+      - name: Dcoker Listing Files and Directories with Detailed Information
         run: ls -a
 
       - name: Run and Build Containers
@@ -24,7 +24,7 @@ jobs:
 
           # Wait for services to initialize (customize as needed)
           sleep 180
-          
+
       - name: Show a List of Running Containers
         run: docker ps
 
@@ -42,26 +42,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Caminho
+      - name: Build Image
         run: docker-compose build
 
-      - name: Caminho
-        run: pwd
-
       - name: Show a List of All Images
         run: docker images
 
-      - name: Faça o login no Docker Hub (ou outro registro)
+      - name: Login Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
         
-      - name: Show a List of All Images
-        run: docker images
-
-      - name: Faça o push da imagem para o Docker Hub
+      - name: Creating a Docker Image Tag for Pushing to Docker Hub
         run: docker tag api-contas-bancarias macgii/api-contas-bancarias
 
       - name: Show a List of All Images
         run: docker images
 
-      - name: Faça o push da imagem para o Docker Hub
+      - name: Push the image to Docker Hub
         run: docker push macgii/api-contas-bancarias:latest
