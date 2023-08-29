@@ -30,7 +30,7 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
-      - name: Executar comando Maven build
+      - name: Maven build
         run: mvn clean install
 
       - name: Build with Maven and run tests
