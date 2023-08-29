@@ -14,9 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          name: artifacts
-          path: api-contas-bancarias
 
       - name: Docker Directory /app
         run: ls -a
@@ -44,6 +41,18 @@ jobs:
 
     steps:
 
+      - name: Docker Directory /app
+        run: ls -a
+
+      - name: Show a List of All Images
+        run: docker images
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          name: artifacts
+          path: api-contas-bancarias
+      
       - name: Docker Directory /app
         run: ls -a
 
