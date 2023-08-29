@@ -3,7 +3,7 @@ name: continuos integration
 on:
   push:
     branches:
-      - feature/deploy-docker
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -90,7 +90,7 @@ jobs:
         run: mvn jacoco:check
 
   analysis:
-    name: Analysis and Coverage
+    name: Analysis Quality Gate
     runs-on: ubuntu-latest
     needs: test
     services:
