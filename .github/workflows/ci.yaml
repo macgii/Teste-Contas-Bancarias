@@ -36,18 +36,5 @@ jobs:
       - name: Extract JaCoCo report
         run: mvn jacoco:report
 
-      - name: Calculate Coverage
-        id: coverage
-        run: |
-          COVERAGE=$(awk -F"[%=]" '/Total/{print $2}' target/site/jacoco/index.html)
-          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
-
-      - name: Check Coverage
-        run: |
-          COVERAGE=${{ steps.coverage.outputs.coverage }}
-          if [ $(echo "$COVERAGE >= 70" | bc) -eq 1 ]; then
-            echo "Coverage is >= 70%"
-          else
-            echo "Coverage is < 70%. Minimum coverage requirement not met."
-            exit 1
-          fi
+      - name: Verify Coverage
+        run: mvn jacoco:check
