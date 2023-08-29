@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          name: artifacts
+          path: api-contas-bancarias
 
       - name: Docker Directory /app
         run: ls -a
