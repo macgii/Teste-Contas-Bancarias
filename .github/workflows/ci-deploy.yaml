@@ -44,8 +44,9 @@ jobs:
     name: Deploy Dockerhub
     needs: build
     runs-on: ubuntu-latest
-
     steps:
+      - name: Caminho
+        run: pwd
 
       - name: Docker Directory /app
         run: ls -a
@@ -55,6 +56,9 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Caminho
+        run: pwd
 
       - name: Docker Directory /app
         run: ls -a
