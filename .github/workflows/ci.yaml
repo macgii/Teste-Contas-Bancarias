@@ -129,28 +129,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias 
-    
-  docker:
-    name: Build with docker
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Docker Directory /app 
-        run: ls -a
-
-      - name: Run and Build Containers
-        run: |
-          docker-compose up -d --build
-
-          # Wait for services to initialize (customize as needed)
-          sleep 180
-
-      - name: Show a List of Running Containers
-        run: docker ps
-      
-      - name: Show a List of All Containers
-        run: docker ps -a
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias

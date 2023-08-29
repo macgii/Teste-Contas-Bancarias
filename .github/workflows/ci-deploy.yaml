@@ -1,0 +1,49 @@
+name: docker Continuos Delivery
+
+on:
+  push:
+    branches:
+      - feature/deploy-docker
+
+jobs:
+
+  build:
+    name: Build with Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Docker Directory /app
+        run: ls -a
+
+      - name: Run and Build Containers
+        run: |
+          docker-compose up -d --build
+
+          # Wait for services to initialize (customize as needed)
+          sleep 180
+
+      - name: Show a List of Running Containers
+        run: docker ps
+
+      - name: Show a List of All Containers
+        run: docker ps -a
+
+  deploy:
+    name: Deploy Dockerhub
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v2
+
+      - name: Faça o login no Docker Hub (ou outro registro)
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
+
+      - name: Faça o push da imagem para o Docker Hub
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias
+
+      - name: Faça o push da imagem para o Docker Hub
+        run: docker push macgii/api-contas-bancarias:latest
