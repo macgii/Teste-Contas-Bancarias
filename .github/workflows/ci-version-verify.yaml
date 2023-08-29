@@ -26,12 +26,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: 'zulu'
+          distribution: "zulu"
 
       - name: Get Current Version
         id: get_version
         run: |
-          echo "::set-output name=version::$(grep -oP '<version>\K[^<]+' pom.xml)"
+          echo "version=$(grep -oP '<version>\K[^<]+' pom.xml)" >> $GITHUB_ENV
 
       - name: Get Previous Version
         id: get_previous_version
@@ -39,15 +39,15 @@ jobs:
           git fetch --tags
           if [ "$(git tag)" ]; then
             PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
-            echo "::set-output name=previous_version::$PREVIOUS_VERSION"
           else
-            echo "::set-output name=previous_version::0.0.0"  # Define uma versão padrão
+            PREVIOUS_VERSION="0.0.0"  # Define uma versão padrão
           fi
+          echo "previous_version=$PREVIOUS_VERSION" >> $GITHUB_ENV
 
       - name: Compare Versions and Verify
         run: |
-          CURRENT_VERSION="${{ steps.get_version.outputs.version }}"
-          PREVIOUS_VERSION="${{ steps.get_previous_version.outputs.previous_version }}"
+          CURRENT_VERSION=$version
+          PREVIOUS_VERSION=$previous_version
 
           # Parse major, minor, and patch versions from version strings
           IFS='.' read -ra CURRENT_VERSION_PARTS <<< "$CURRENT_VERSION"
