@@ -13,6 +13,9 @@ jobs:
     - name: Checkout código
       uses: actions/checkout@v2
 
+    - name: Logout do Docker Hub
+      run: docker logout
+
     - name: Faça o build e teste
       run: |
           docker-compose up -d --build
@@ -24,8 +27,14 @@ jobs:
       run: docker images
 
     - name: Faça o login no Docker Hub (ou outro registro)
-      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin ${{ secrets.DOCKERHUB_TOKEN }} docker.io
 
     - name: Faça o push da imagem para o Docker Hub
-      run: docker push api-contas-bancarias:latest
+      run: docker tag api-contas-bancarias macgii/api-contas-bancarias
+
+    - name: Faça o push da imagem para o Docker Hub
+      run: docker push macgii/api-contas-bancarias:latest
+
+    - name: Show a List of All Images
+      run: docker images
 
