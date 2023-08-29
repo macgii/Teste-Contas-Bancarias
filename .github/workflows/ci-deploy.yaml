@@ -64,7 +64,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: docker-image
-          path: /home/runner/work/Teste-Contas-Bancarias/Teste-Contas-Bancarias
 
       - name: Load Docker image
         run: |
