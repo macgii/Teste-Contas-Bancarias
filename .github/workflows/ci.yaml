@@ -92,7 +92,7 @@ jobs:
   analysis:
     name: Analysis Quality Gate
     runs-on: ubuntu-latest
-    needs: coverage
+    needs: test
     services:
       mysql:
         image: mysql:8.0.33
@@ -134,7 +134,7 @@ jobs:
   docker_build:
     name: Run and Build with Docker
     runs-on: ubuntu-latest
-    needs: coverage
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
