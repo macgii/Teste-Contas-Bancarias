@@ -3,7 +3,7 @@ name: continuos integration
 on:
   push:
     branches:
-      - develop
+      - hotfix/test
   pull_request:
     types: [opened, synchronize, reopened]
 
