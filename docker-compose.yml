@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 networks:
@@ -61,3 +62,4 @@ services:
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_JACKSON_DATE-FORMAT=yyyy-MM-dd HH:mm:ss
       - SPRING_JACKSON_TIME-ZONE=Brazil/East
+      - SPRING_PROFILES_ACTIVE=dev

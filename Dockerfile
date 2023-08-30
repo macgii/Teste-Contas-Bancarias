@@ -13,6 +13,8 @@ WORKDIR /app
 
 COPY --from=build /app/target/banco-0.0.1-SNAPSHOT.jar banco-0.0.1-SNAPSHOT.jar
 
+ENV SPRING_PROFILES_ACTIVE=dev
+
 EXPOSE 8080
 
 CMD ["java", "-jar", "banco-0.0.1-SNAPSHOT.jar"]
