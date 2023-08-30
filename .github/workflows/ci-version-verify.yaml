@@ -27,11 +27,11 @@ jobs:
         with:
           java-version: 17
           distribution: "zulu"
-
-      - name: Bump version
-        uses: jakejarvis/semver@v0.11.0
+      - uses: avides/actions-project-version-check@latest
+        id: actions_project_version_check
         with:
-          version: 'auto'
-          bump: 'patch'
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
 
+      - name: use-version-from-check
+        run: echo "New version is:" ${{ steps.actions_project_version_check.outputs.version }}
