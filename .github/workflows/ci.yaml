@@ -3,13 +3,13 @@ name: continuos integration
 on:
   push:
     branches:
-      - develop
+      - feature/deploy-docker
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
   build:
-    name: Build
+    name: Build with Java
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -60,7 +60,7 @@ jobs:
   coverage:
     name: Coverage Tests
     runs-on: ubuntu-latest
-    needs: build
+    needs: test
     services:
       mysql:
         image: mysql:8.0.33
@@ -92,7 +92,7 @@ jobs:
   analysis:
     name: Analysis Quality Gate
     runs-on: ubuntu-latest
-    needs: test
+    needs: coverage
     services:
       mysql:
         image: mysql:8.0.33
@@ -130,3 +130,55 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias
+
+  docker_build:
+    name: Run and Build with Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Dcoker Listing Files and Directories with Detailed Information
+        run: ls -a
+
+      - name: Run and Build Containers
+        run: |
+          docker-compose up -d --build
+
+          # Wait for services to initialize (customize as needed)
+          sleep 180
+
+      - name: Show a List of Running Containers
+        run: docker ps
+
+      - name: Show a List of All Containers
+        run: docker ps -a
+      
+      - name: Show a List of All Images
+        run: docker images
+
+  deploy:
+    name: Deploy Dockerhub
+    needs: [analisys, coverage, docker_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Image
+        run: docker-compose build
+
+      - name: Show a List of All Images
+        run: docker images
+
+      - name: Login Docker Hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
+        
+      - name: Creating a Docker Image Tag for Pushing to Docker Hub
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias
+
+      - name: Show a List of All Images
+        run: docker images
+
+      - name: Push the image to Docker Hub
+        run: docker push macgii/api-contas-bancarias:latest
