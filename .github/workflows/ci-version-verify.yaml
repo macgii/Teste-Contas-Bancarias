@@ -35,3 +35,19 @@ jobs:
 
       - name: use-version-from-check
         run: echo ${{ steps.actions_project_version_check.outputs.version }}
+
+      - name: Pegar Versão Atual
+        id: get_current_version
+        run: echo ${{ steps.actions_project_version_check.outputs.version }}
+      
+      - name: Pegar Versão da Branch Alvo
+        id: get_target_version
+        run: echo $(git show origin/develop:pom.xml | grep -oPm1 "(?<=<version>)[^<]+")
+        
+      - name: Comparar Versões
+        run: |
+          if [ "${{ steps.get_current_version.outputs.version }}" == "${{ steps.get_target_version.outputs.version }}" ]; then
+            echo "As versões são iguais."
+          else
+            echo "As versões são diferentes."
+          fi
