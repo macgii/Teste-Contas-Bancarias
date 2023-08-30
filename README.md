@@ -1,3 +1,13 @@
+# Sonar Badge
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=bugs)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=coverage)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
+
 # Como executar o projeto com docker
 
 ### Pré-requisitos
