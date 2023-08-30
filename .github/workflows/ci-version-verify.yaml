@@ -33,5 +33,5 @@ jobs:
         with:
           version: 'auto'
           bump: 'patch'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
 
