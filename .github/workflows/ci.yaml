@@ -3,7 +3,7 @@ name: continuos integration
 on:
   push:
     branches:
-      - feature/deploy-docker
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
