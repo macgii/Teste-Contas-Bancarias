@@ -159,7 +159,7 @@ jobs:
 
   deploy:
     name: Deploy Dockerhub
-    needs: [analisys, coverage, docker_build]
+    needs: [analysis, coverage, docker_build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
