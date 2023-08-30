@@ -2,8 +2,10 @@ name: Verify Version
 
 on:
   push:
-    branches:
-      - feature/deploy-docker
+    branches:    
+      - '**'        # matches every branch
+      - '!feature/deploy-docker'   # excludes master
+
 
 jobs:
   verify_version:
