@@ -28,41 +28,10 @@ jobs:
           java-version: 17
           distribution: "zulu"
 
-      - name: Get Current Version
-        id: get_version
-        run: |
-          echo "version=$(grep -oP '<version>\K[^<]+' pom.xml)" >> $GITHUB_ENV
+      - name: Bump version
+        uses: jakejarvis/semver@v0.11.0
+        with:
+          version: 'auto'
+          bump: 'patch'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Previous Version
-        id: get_previous_version
-        run: |
-          git fetch --tags
-          if [ "$(git tag)" ]; then
-            PREVIOUS_VERSION=$(git describe --tags --abbrev=0)
-          else
-            PREVIOUS_VERSION="0.0.0"  # Define uma versão padrão
-          fi
-          echo "previous_version=$PREVIOUS_VERSION" >> $GITHUB_ENV
-
-      - name: Compare Versions and Verify
-        run: |
-          CURRENT_VERSION=$version
-          PREVIOUS_VERSION=$previous_version
-
-          # Parse major, minor, and patch versions from version strings
-          IFS='.' read -ra CURRENT_VERSION_PARTS <<< "$CURRENT_VERSION"
-          IFS='.' read -ra PREVIOUS_VERSION_PARTS <<< "$PREVIOUS_VERSION"
-
-          # Compare major, minor, and patch versions
-          if [ "${CURRENT_VERSION_PARTS[0]}" -lt "${PREVIOUS_VERSION_PARTS[0]}" ] || \
-             ([ "${CURRENT_VERSION_PARTS[0]}" -eq "${PREVIOUS_VERSION_PARTS[0]}" ] && [ "${CURRENT_VERSION_PARTS[1]}" -lt "${PREVIOUS_VERSION_PARTS[1]}" ]) || \
-             ([ "${CURRENT_VERSION_PARTS[0]}" -eq "${PREVIOUS_VERSION_PARTS[0]}" ] && [ "${CURRENT_VERSION_PARTS[1]}" -eq "${PREVIOUS_VERSION_PARTS[1]}" ] && [ "${CURRENT_VERSION_PARTS[2]}" -le "${PREVIOUS_VERSION_PARTS[2]}" ]); then
-            echo "Nova versão não segue o padrão SemVer: $CURRENT_VERSION (versão anterior: $PREVIOUS_VERSION)"
-            exit 1
-          else
-            echo "Versão válida: $CURRENT_VERSION"
-          fi
-
-      - name: Build Application
-        run: |
-          echo "Construindo a aplicação..."
