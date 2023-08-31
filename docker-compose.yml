@@ -4,11 +4,9 @@ networks:
   aw-networks:
     driver: bridge
 
-
 volumes:
   prometheus_data:
   grafana_data:
-
 
 services:
   prometheus:
@@ -43,7 +41,6 @@ services:
       retries: 5
     volumes:
       - ./data:/var/lib/mysql
-
 
   app:
     image: api-contas-bancarias
