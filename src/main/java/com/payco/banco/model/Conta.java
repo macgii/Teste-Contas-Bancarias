@@ -52,6 +52,22 @@ public class Conta {
 		this.saldo = saldo;
 	}
 	
+	public Conta(@NotBlank @Size(min = 2) String titular, @Min(10000000000L) @Max(99999999999L) long cpf,
+			@Min(10000000) @Max(99999999) int numeroConta, @Min(0) float saldo) {
+		this.titular = titular;
+		this.cpf = cpf;
+		this.numeroConta = numeroConta;
+		this.saldo = saldo;
+	}
+
+	public Conta(Long id, @NotBlank @Size(min = 2) String titular, @Min(10000000000L) @Max(99999999999L) long cpf,
+			@Min(10000000) @Max(99999999) int numeroConta) {
+		this.id = id;
+		this.titular = titular;
+		this.cpf = cpf;
+		this.numeroConta = numeroConta;
+	}
+
 	public Long getId() {
 		return id;
 	}
