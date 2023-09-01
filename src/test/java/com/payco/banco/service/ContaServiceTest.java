@@ -53,7 +53,7 @@ class ContaServiceTest {
 	@Test
 	@DisplayName("Método que escolhe serviço - servicos()")
 	void sevicos() {
-		HttpEntity<Conta> requisicao = new HttpEntity<Conta>(new Conta(null, "Catarina", 12394508402L, 87667322, 2800));
+		HttpEntity<Conta> requisicao = new HttpEntity<Conta>(new Conta(null, "Catarina", 12394508409L, 87667322, 2800));
 		ResponseEntity<Conta> resposta = testRestTemplate.exchange("/contas", HttpMethod.POST, requisicao, Conta.class);
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode(), "Status Code da conta criada deve ser igual");
 		Long id = resposta.getBody().getId();
