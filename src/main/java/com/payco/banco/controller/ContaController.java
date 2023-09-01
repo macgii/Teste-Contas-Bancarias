@@ -22,6 +22,7 @@ import com.payco.banco.model.Conta;
 import com.payco.banco.model.ContaDTO;
 import com.payco.banco.repository.ContaRepository;
 import com.payco.banco.service.ContaService;
+import com.payco.banco.util.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -58,9 +59,7 @@ public class ContaController {
 	public ResponseEntity<Conta> getById(
 			@Parameter(in = ParameterIn.PATH, description = "ID da conta") @PathVariable Long id) {
 		logger.info("ContaController: Iniciando método getById() - Id = {}", id);
-		return contaRepository.findById(id)
-			.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+		return contaRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@Operation(summary = "Criar conta", description = "Operação que cria uma conta bancária.")
@@ -68,8 +67,10 @@ public class ContaController {
 	@PostMapping
 	public ResponseEntity<Conta> criarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
+
+		Util.processarData(contaDTO.getTitular());
 		Conta conta = new Conta(contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), 0);
-	    logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
+		logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
 		return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
 	}
 
@@ -78,19 +79,20 @@ public class ContaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Conta> atualizarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
-		
+
+		Util.processarData(contaDTO.getTitular());
 		Optional<Conta> contaOptional = contaRepository.findById(contaDTO.getId());
 		if (contaOptional.isPresent()) {
-		    Conta contaEncontrada = contaOptional.get();
-		    
-		    Conta conta = new Conta(contaEncontrada.getId(), contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), contaEncontrada.getSaldo());
-		    logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta);
+			Conta contaEncontrada = contaOptional.get();
+
+			Conta conta = new Conta(contaEncontrada.getId(), contaDTO.getTitular(), contaDTO.getCpf(),
+					contaDTO.getNumeroConta(), contaEncontrada.getSaldo());
+			logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta);
 			return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
-		}
-		else {
+		} else {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 	}
 
 	@Operation(summary = "Deletar conta por ID", description = "Operação que deleta uma conta bancária por ID.")
