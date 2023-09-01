@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.payco.banco.model.Conta;
 import com.payco.banco.repository.ContaRepository;
+import com.payco.banco.util.Util;
 
 @Service
 public class ContaService {
@@ -45,6 +46,7 @@ public class ContaService {
 
 	public ResponseEntity<Conta> servicos(String opcao, float valor, Long id) {
 
+		Util.processarData(opcao);
 		logger.info("ContaService: Iniciando método servicos() - opcao = {}, valor = {}, id = {}", opcao, valor, id);
 
 		Optional<Conta> resposta = contaRepository.findById(id);
