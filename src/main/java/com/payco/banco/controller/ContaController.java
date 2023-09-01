@@ -22,7 +22,6 @@ import com.payco.banco.model.Conta;
 import com.payco.banco.model.ContaDTO;
 import com.payco.banco.repository.ContaRepository;
 import com.payco.banco.service.ContaService;
-import com.payco.banco.util.Util;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -68,7 +67,7 @@ public class ContaController {
 	public ResponseEntity<Conta> criarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
 
-		Util.processarData(contaDTO.getTitular());
+		contaDTO.setTitular(contaDTO.getTitular().replaceAll("[\n\r]", "_"));
 		Conta conta = new Conta(contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), 0);
 		logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
 		return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
@@ -80,7 +79,7 @@ public class ContaController {
 	public ResponseEntity<Conta> atualizarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
 
-		Util.processarData(contaDTO.getTitular());
+		contaDTO.setTitular(contaDTO.getTitular().replaceAll("[\n\r]", "_"));
 		Optional<Conta> contaOptional = contaRepository.findById(contaDTO.getId());
 		if (contaOptional.isPresent()) {
 			Conta contaEncontrada = contaOptional.get();
