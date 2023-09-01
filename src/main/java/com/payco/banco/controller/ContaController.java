@@ -1,6 +1,7 @@
 package com.payco.banco.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.payco.banco.model.Conta;
+import com.payco.banco.model.ContaDTO;
 import com.payco.banco.repository.ContaRepository;
 import com.payco.banco.service.ContaService;
 
@@ -58,7 +60,8 @@ public class ContaController {
 	public ResponseEntity<Conta> getById(
 			@Parameter(in = ParameterIn.PATH, description = "ID da conta") @PathVariable Long id) {
 		logger.info("ContaController: Iniciando método getById() - Id = {}", id);
-		return contaRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
+		return contaRepository.findById(id)
+			.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
 
@@ -66,8 +69,9 @@ public class ContaController {
 	@ApiResponse(responseCode = "201", description = "Conta criada com sucesso.")
 	@PostMapping
 	public ResponseEntity<Conta> criarConta(
-			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody Conta conta) {
-		logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta.toString());
+			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
+		Conta conta = new Conta(contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), 0);
+	    logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
 		return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
 	}
 
@@ -75,9 +79,20 @@ public class ContaController {
 	@ApiResponse(responseCode = "201", description = "Conta atualizada com sucesso.")
 	@PutMapping("/{id}")
 	public ResponseEntity<Conta> atualizarConta(
-			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody Conta conta) {
-		logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta.toString());
-		return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
+			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
+		
+		Optional<Conta> contaOptional = contaRepository.findById(contaDTO.getId());
+		if (contaOptional.isPresent()) {
+		    Conta contaEncontrada = contaOptional.get();
+		    
+		    Conta conta = new Conta(contaEncontrada.getId(), contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), contaEncontrada.getSaldo());
+		    logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta);
+			return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
+		
 	}
 
 	@Operation(summary = "Deletar conta por ID", description = "Operação que deleta uma conta bancária por ID.")
