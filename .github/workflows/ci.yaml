@@ -3,9 +3,6 @@ name: continuos integration
 on:
   workflow_dispatch:
     description: Você pode disparar manualmente este workflow em qualquer branch alem da main para fins de teste.
-  push:
-    branches:
-      - hotfix/sonarCloud
   pull_request:
     branches:
       - main
