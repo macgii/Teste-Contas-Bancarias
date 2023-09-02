@@ -3,7 +3,6 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
-
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=bugs)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=coverage)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
@@ -56,3 +55,27 @@ Faça o download e Importe a Collection do Postman: <br />
 Abra o Postman. <br />
 Vá em "File" -> "Import" e selecione o arquivo da collection. <br />
 Explore a collection importada para fazer requisições.
+
+***
+## Links Úteis para Acessar
+### Explore a API!
+Aqui, você encontrará uma lista de links úteis que oferecem documentação e ferramentas para interação com os recursos e funcionalidades, proporcionando uma experiência completa de desenvolvimento, monitoramento e análise de código. Vamos dar uma olhada:
+
+ ### **Actuator** - [Acesse aqui](http://localhost:8080/actuator)
+  
+O Spring Boot Actuator oferece informações sobre o aplicativo em execução, métricas, status de saúde e muito mais.
+
+### **Prometheus** - [Acesse aqui](http://localhost:9090/)
+Prometheus é um sistema de monitoramento de código aberto que coleta métricas e estatísticas sobre sistemas em execução.
+
+### **Grafana** - [Acesse aqui](http://localhost:3000/login)
+Grafana é uma plataforma de análise e visualização de código aberto que permite criar painéis e gráficos personalizados para seus dados.
+
+### **Swagger** - [Acesse aqui](http://localhost:8080/swagger-ui/index.html)
+Swagger é uma ferramenta que permite criar, documentar e testar APIs REST de forma interativa.
+
+### **SonarCloud** - [Acesse aqui](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias&branch=main)
+SonarCloud é uma plataforma de análise de código que fornece insights sobre a qualidade do código, identifica problemas e ajuda a melhorar a manutenção do software.
+
+### **Dockerhub** - [Acesse aqui](https://hub.docker.com/u/macgii)
+Dockerhub é um registro de contêineres que permite armazenar, compartilhar e gerenciar imagens de contêineres Docker.
