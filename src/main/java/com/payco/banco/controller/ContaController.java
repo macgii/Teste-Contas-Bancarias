@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +32,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/contas")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Contas", description = "Operações relacionadas aos contas")
 public class ContaController {
 
@@ -60,9 +58,7 @@ public class ContaController {
 	public ResponseEntity<Conta> getById(
 			@Parameter(in = ParameterIn.PATH, description = "ID da conta") @PathVariable Long id) {
 		logger.info("ContaController: Iniciando método getById() - Id = {}", id);
-		return contaRepository.findById(id)
-			.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+		return contaRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@Operation(summary = "Criar conta", description = "Operação que cria uma conta bancária.")
@@ -70,8 +66,10 @@ public class ContaController {
 	@PostMapping
 	public ResponseEntity<Conta> criarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
+
+		contaDTO.setTitular(contaDTO.getTitular().replaceAll("[\n\r]", "_"));
 		Conta conta = new Conta(contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), 0);
-	    logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
+		logger.info("ContaController: Iniciando método criarConta() - Conta = {}", conta);
 		return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
 	}
 
@@ -80,19 +78,20 @@ public class ContaController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Conta> atualizarConta(
 			@Parameter(in = ParameterIn.DEFAULT, description = "Dados da conta a ser criada") @RequestBody ContaDTO contaDTO) {
-		
+
+		contaDTO.setTitular(contaDTO.getTitular().replaceAll("[\n\r]", "_"));
 		Optional<Conta> contaOptional = contaRepository.findById(contaDTO.getId());
 		if (contaOptional.isPresent()) {
-		    Conta contaEncontrada = contaOptional.get();
-		    
-		    Conta conta = new Conta(contaEncontrada.getId(), contaDTO.getTitular(), contaDTO.getCpf(), contaDTO.getNumeroConta(), contaEncontrada.getSaldo());
-		    logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta);
+			Conta contaEncontrada = contaOptional.get();
+
+			Conta conta = new Conta(contaEncontrada.getId(), contaDTO.getTitular(), contaDTO.getCpf(),
+					contaDTO.getNumeroConta(), contaEncontrada.getSaldo());
+			logger.info("ContaController: Iniciando método atualizarConta() - Conta = {}", conta);
 			return ResponseEntity.status(HttpStatus.CREATED).body(contaRepository.save(conta));
-		}
-		else {
+		} else {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 	}
 
 	@Operation(summary = "Deletar conta por ID", description = "Operação que deleta uma conta bancária por ID.")

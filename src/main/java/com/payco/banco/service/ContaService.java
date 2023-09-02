@@ -45,6 +45,7 @@ public class ContaService {
 
 	public ResponseEntity<Conta> servicos(String opcao, float valor, Long id) {
 
+		opcao = opcao.replaceAll("[\n\r]", "_");
 		logger.info("ContaService: Iniciando método servicos() - opcao = {}, valor = {}, id = {}", opcao, valor, id);
 
 		Optional<Conta> resposta = contaRepository.findById(id);
