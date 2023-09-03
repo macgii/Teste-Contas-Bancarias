@@ -1,11 +1,10 @@
 name: continuos integration
 
 on:
-  workflow_dispatch:
-    description: Você pode disparar manualmente este workflow em qualquer branch alem da main para fins de teste.
-  pull_request:
+  push:
     branches:
-      - main
+      - feature/quality-gate
+  pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -129,6 +128,62 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq -y
+
+      - name: Extract Quality Gate information
+        run: |
+          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
+
+          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
+          RELIABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_reliability_rating").status')
+          SECURITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_rating").status')
+          MAINTAINABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_maintainability_rating").status')
+          SECURITY_REVIEW=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_hotspots_reviewed").status')
+          COVERAGE=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_coverage").status')
+          DUPLICATIONS=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_duplicated_lines_density").status')
+
+          if [ "$QUALITY_GATE_STATUS" == "OK" ]; then
+            QUALITY_GATE_STATUS="Passed"
+          else
+            QUALITY_GATE_STATUS="Failed"
+          fi
+
+          echo "Quality Gate: $QUALITY_GATE_STATUS"
+          echo "Reliability: $RELIABILITY"
+          echo "Security: $SECURITY"
+          echo "Maintainability: $MAINTAINABILITY"
+          echo "Security Review: $SECURITY_REVIEW"
+          echo "Coverage: $COVERAGE"
+          echo "Duplications: $DUPLICATIONS"
+
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Check Quality Gate Status and Metrics
+        run: |
+          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
+
+          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
+
+          METRICS_PASSED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "OK") | .metricKey) | join(", ")')
+
+          METRICS_FAILED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "ERROR") | .metricKey) | join(", ")')
+
+          if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
+            echo "Quality Gate failed. Status: $QUALITY_GATE_STATUS"
+            echo "Metrics Passed: $METRICS_PASSED"
+            echo "Metrics Failed: $METRICS_FAILED"
+            exit 1
+          else
+            echo "Quality Gate passed. Status: $QUALITY_GATE_STATUS"
+            echo "Metrics Passed: $METRICS_PASSED"
+            echo "Metrics Failed: $METRICS_FAILED"
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   docker_build:
     name: Run and Build with Docker
