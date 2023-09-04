@@ -24,11 +24,20 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'zulu'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      
       - name: Build with Maven
         run: mvn clean install
 
@@ -49,11 +58,13 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'zulu'
+      
       - name: Run Tests
         run: mvn test  
 
@@ -74,6 +85,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -106,28 +118,79 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'zulu'
+      
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+      
       - name: Build and analyze
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq -y
+
+      - name: Extract Quality Gate information
+        run: |
+          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
+
+          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
+          RELIABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_reliability_rating").status')
+          SECURITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_rating").status')
+          MAINTAINABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_maintainability_rating").status')
+          SECURITY_REVIEW=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_hotspots_reviewed").status')
+          COVERAGE=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_coverage").status')
+          DUPLICATIONS=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_duplicated_lines_density").status')
+
+          if [ "$QUALITY_GATE_STATUS" == "OK" ]; then
+            QUALITY_GATE_STATUS="Passed"
+          else
+            QUALITY_GATE_STATUS="Failed"
+          fi
+
+          echo "Quality Gate: $QUALITY_GATE_STATUS"
+          echo "Reliability: $RELIABILITY"
+          echo "Security: $SECURITY"
+          echo "Maintainability: $MAINTAINABILITY"
+          echo "Security Review: $SECURITY_REVIEW"
+          echo "Coverage: $COVERAGE"
+          echo "Duplications: $DUPLICATIONS"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Check Quality Gate Status and Metrics
+        run: |
+          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
+
+          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
+          METRICS_PASSED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "OK") | .metricKey) | join(", ")')
+          METRICS_FAILED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "ERROR") | .metricKey) | join(", ")')
+
+          if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
+            echo "Quality Gate failed. Status: $QUALITY_GATE_STATUS"
+            echo "Metrics Passed: $METRICS_PASSED"
+            echo "Metrics Failed: $METRICS_FAILED"
+            exit 1
+          else
+            echo "Quality Gate passed. Status: $QUALITY_GATE_STATUS"
+            echo "Metrics Passed: $METRICS_PASSED"
+            echo "Metrics Failed: $METRICS_FAILED"
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   docker_build:
     name: Run and Build with Docker
@@ -137,15 +200,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Dcoker Listing Files and Directories with Detailed Information
+      - name: Docker Listing Files and Directories with Detailed Information
         run: ls -a
 
       - name: Run and Build Containers
-        run: |
-          docker-compose up -d --build
-
-          # Wait for services to initialize (customize as needed)
-          sleep 180
+        run: docker-compose up -d --build
 
       - name: Show a List of Running Containers
         run: docker ps
@@ -165,6 +224,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Project Version check (Maven, NodeJS...)
+        uses: avides/actions-project-version-check@v1.4.0
+        id: actions_project_version_check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
+
+      - name: use-version-from-check
+        run: echo "version=$(echo ${{ steps.actions_project_version_check.outputs.version }})" >> $GITHUB_ENV
+
+      - name: Set commit SHA
+        id: set-commit-sha
+        run: echo "commit_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
       - name: Build Image
         run: docker-compose build
 
@@ -174,11 +247,17 @@ jobs:
       - name: Login Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
         
-      - name: Creating a Docker Image Tag for Pushing to Docker Hub
-        run: docker tag api-contas-bancarias macgii/api-contas-bancarias
+      - name: Creating a Docker Image Tag "specific version"
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
+        
+      - name: Creating a Docker Image Tag "latest" 
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:latest
 
       - name: Show a List of All Images
         run: docker images
 
-      - name: Push the image to Docker Hub
+      - name: Push the image to Docker Hub "specific version"
+        run: docker push macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
+
+      - name: Push the image to Docker Hub "latest" 
         run: docker push macgii/api-contas-bancarias:latest
