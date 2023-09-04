@@ -7,12 +7,12 @@ COPY src ./src
 
 RUN mvn package -DskipTests
 
-FROM openjdk:17-jdk
+FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/target/banco-0.0.1-SNAPSHOT.jar banco-0.0.1-SNAPSHOT.jar
+COPY --from=build /app/target/banco-0.0.1-SNAPSHOT.jar banco-*.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "-Dspring.profiles.active=prod", "banco-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Dspring.profiles.active=prod", "banco-*.jar"]
