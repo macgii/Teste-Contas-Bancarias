@@ -3,7 +3,7 @@ name: continuos integration
 on:
   push:
     branches:
-      - feature/quality-gate
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -221,6 +221,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Project Version check (Maven, NodeJS...)
+        uses: avides/actions-project-version-check@v1.4.0
+        id: actions_project_version_check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
+
+      - name: use-version-from-check
+        run: echo "version=$(echo ${{ steps.actions_project_version_check.outputs.version }})" >> $GITHUB_ENV
+
+      - name: Set commit SHA
+        id: set-commit-sha
+        run: echo "commit_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
       - name: Build Image
         run: docker-compose build
 
@@ -230,11 +244,18 @@ jobs:
       - name: Login Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
         
-      - name: Creating a Docker Image Tag for Pushing to Docker Hub
-        run: docker tag api-contas-bancarias macgii/api-contas-bancarias
+      - name: Creating a Docker Image Tag "specific version"
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
+        
+      - name: Creating a Docker Image Tag "latest" 
+        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:latest
 
       - name: Show a List of All Images
         run: docker images
 
-      - name: Push the image to Docker Hub
+      - name: Push the image to Docker Hub "specific version"
+        run: docker push macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
+
+      - name: Push the image to Docker Hub "latest" 
         run: docker push macgii/api-contas-bancarias:latest
+        
