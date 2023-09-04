@@ -11,7 +11,7 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/target/banco-0.0.1-SNAPSHOT.jar banco-*.jar
+COPY --from=build /app/target/banco-*.jar banco-*.jar
 
 EXPOSE 8080
 
