@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.payco</groupId>
 	<artifactId>banco</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0v</version>
 	<name>banco</name>
 	<description>Projeto de contas bancárias com Spring Boot</description>
 	<properties>
@@ -87,6 +87,12 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.28</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

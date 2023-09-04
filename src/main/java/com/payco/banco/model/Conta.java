@@ -9,9 +9,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name ="tb_contas")
 public class Conta {
@@ -37,80 +43,11 @@ public class Conta {
     @Min(0)
 	private float saldo;
 	
-	public Conta() {
-		
-	}
-	
-	public Conta(Long id, @NotBlank @Size(min = 2) String titular,
-			@Min(10000000000L) @Max(99999999999L) @NotNull long cpf,
-			@Min(10000000) @Max(99999999) @NotNull int numeroConta, @Min(0) float saldo) {
-		super();
-		this.id = id;
-		this.titular = titular;
-		this.cpf = cpf;
-		this.numeroConta = numeroConta;
-		this.saldo = saldo;
-	}
-	
 	public Conta(@NotBlank @Size(min = 2) String titular, @Min(10000000000L) @Max(99999999999L) long cpf,
 			@Min(10000000) @Max(99999999) int numeroConta, @Min(0) float saldo) {
 		this.titular = titular;
 		this.cpf = cpf;
 		this.numeroConta = numeroConta;
 		this.saldo = saldo;
-	}
-
-	public Conta(Long id, @NotBlank @Size(min = 2) String titular, @Min(10000000000L) @Max(99999999999L) long cpf,
-			@Min(10000000) @Max(99999999) int numeroConta) {
-		this.id = id;
-		this.titular = titular;
-		this.cpf = cpf;
-		this.numeroConta = numeroConta;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getTitular() {
-		return titular;
-	}
-
-	public void setTitular(String titular) {
-		this.titular = titular;
-	}
-
-	public long getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(long cpf) {
-		this.cpf = cpf;
-	}
-
-	public int getNumeroConta() {
-		return numeroConta;
-	}
-
-	public void setNumeroConta(int numeroConta) {
-		this.numeroConta = numeroConta;
-	}
-
-	public float getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(float saldo) {
-		this.saldo = saldo;
-	}
-	
-	@Override
-	public String toString() {  
-		return "(Id: " + this.getId() + ") (Titular: " + this.getTitular() + ") (CPF: " + this.getCpf() + ") (Numero Conta: " + this.getNumeroConta() + ") (Saldo: R$" + this.getSaldo() + ")";
-	}
-
+	}	
 }
