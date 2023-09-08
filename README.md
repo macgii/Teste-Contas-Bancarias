@@ -7,6 +7,11 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=macgii_Teste-Contas-Bancarias&metric=coverage)](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias)
 
+# Documentação da API Completa: 
+
+ Nesta documentação, você encontrará detalhes abrangentes sobre a API, seus endpoints e recursos disponíveis.
+ Para começar a explorar, acesse a documentação completa clicando no seguinte link: [Documentação da API de Contas Bancárias](https://github.com/macgii/Teste-Contas-Bancarias/wiki).
+
 # Como executar o projeto com docker
 
 ### Pré-requisitos
@@ -57,21 +62,21 @@ Vá em "File" -> "Import" e selecione o arquivo da collection. <br />
 Explore a collection importada para fazer requisições.
 
 ***
-## Links Úteis para Acessar
+## Links Úteis para Acessar Localmente
 ### Explore a API!
 Aqui, você encontrará uma lista de links úteis que oferecem documentação e ferramentas para interação com os recursos e funcionalidades, proporcionando uma experiência completa de desenvolvimento, monitoramento e análise de código. Vamos dar uma olhada:
 
- ### **Actuator** - [Acesse aqui](http://localhost:8080/actuator)
+ ### **Actuator** - [http://localhost:8080/actuator](http://localhost:8080/actuator)
   
 O Spring Boot Actuator oferece informações sobre o aplicativo em execução, métricas, status de saúde e muito mais.
 
-### **Prometheus** - [Acesse aqui](http://localhost:9090/)
+### **Prometheus** - [http://localhost:9090/](http://localhost:9090/)
 Prometheus é um sistema de monitoramento de código aberto que coleta métricas e estatísticas sobre sistemas em execução.
 
-### **Grafana** - [Acesse aqui](http://localhost:3000/login)
+### **Grafana** - [http://localhost:3000/login](http://localhost:3000/login)
 Grafana é uma plataforma de análise e visualização de código aberto que permite criar painéis e gráficos personalizados para seus dados.
 
-### **Swagger** - [Acesse aqui](http://localhost:8080/swagger-ui/index.html)
+### **Swagger** - [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 Swagger é uma ferramenta que permite criar, documentar e testar APIs REST de forma interativa.
 
 ### **SonarCloud** - [Acesse aqui](https://sonarcloud.io/summary/new_code?id=macgii_Teste-Contas-Bancarias&branch=main)
