@@ -79,13 +79,18 @@ jobs:
         with:
           paths: "target/**/TEST-*.xml"
           output: error.md 
-          show: "fail, skip, pass, none"
+          show: "fail, skip, none"
         if: always()
         
       - name: Read and Append Test Summary
         run: |
           cat error.md >> $GITHUB_STEP_SUMMARY
         if: always()
+
+      - name: Debug Test Summary File
+        run: |
+          ls -l target/**/TEST-*.xml
+          cat test-summary.md
 
   coverage:
     name: Coverage Tests
