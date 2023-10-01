@@ -41,12 +41,14 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      - name: Adding markdown
-        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
-
       - name: Build with Maven
-        run: echo '## Build Status - Success' >> $GITHUB_STEP_SUMMARY
-
+        run: |
+          if mvn clean install -DskipTests; then
+            echo '### Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
+          else
+            echo '### Build failed! ❌' >> $GITHUB_STEP_SUMMARY
+            exit 1 # Sai com código de erro
+          fi
 
   test:
     name: Unit Tests

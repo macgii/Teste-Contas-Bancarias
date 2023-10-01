@@ -28,7 +28,7 @@ public class Conta {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private ong id;
 	
 	@NotBlank
 	@Size(min = 2)
