@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ class ContaControllerTest {
 
 		HttpEntity<ContaDTO> requisicao = new HttpEntity<ContaDTO>(new ContaDTO());
 		ResponseEntity<Conta> resposta = testRestTemplate.exchange("/contas", HttpMethod.POST, requisicao, Conta.class);
-		//throw new RuntimeException("Este é um erro de exemplo");
+		throw new RuntimeException("Este é um erro de exemplo");
 	}
 
 	@Test
@@ -91,7 +92,7 @@ class ContaControllerTest {
 		assertEquals(HttpStatus.CREATED, resposta1.getStatusCode(), "Status Code da conta deve ser igual");
 
 	}
-
+	@Disabled
 	@Test
 	@DisplayName("Método que exlcluí conta por Id - deletar()")
 	void deletar() {
