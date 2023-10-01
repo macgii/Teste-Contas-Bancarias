@@ -73,7 +73,7 @@ class ContaControllerTest {
 
 		HttpEntity<ContaDTO> requisicao = new HttpEntity<ContaDTO>(new ContaDTO());
 		ResponseEntity<Conta> resposta = testRestTemplate.exchange("/contas", HttpMethod.POST, requisicao, Conta.class);
-		throw new RuntimeException("Este é um erro de exemplo");
+		//throw new RuntimeException("Este é um erro de exemplo");
 	}
 
 	@Test
