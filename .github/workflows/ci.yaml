@@ -90,7 +90,7 @@ jobs:
       - name: Debug Test Summary File
         run: |
           ls -l target/**/TEST-*.xml
-          cat test-summary.md
+          cat error.md
         if: always()
 
   coverage:
