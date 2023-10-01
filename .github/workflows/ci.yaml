@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Summary
         run: |
-          echo '## Atenção em caso de erro em qualquer job!' >> $GITHUB_STEP_SUMMARY
-          echo '## Alem do sumario entre no job e veja os logs minuciosamente!' >> $GITHUB_STEP_SUMMARY
+          echo 'Atenção em caso de **erro** em qualquer job!' >> $GITHUB_STEP_SUMMARY
+          echo 'Alem do sumario entre no job e **veja os logs minuciosamente!**' >> $GITHUB_STEP_SUMMARY
   build:
     name: Build with Java
     runs-on: ubuntu-latest
@@ -49,9 +49,9 @@ jobs:
       - name: Build with Maven
         run: |
           if mvn clean install -DskipTests; then
-            echo '## Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
+            echo 'Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
           else
-            echo '## Build failed! ❌' >> $GITHUB_STEP_SUMMARY
+            echo 'Build failed! ❌' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
 
