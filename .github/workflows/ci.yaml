@@ -81,7 +81,6 @@ jobs:
 
       - name: Run Tests
         run: mvn test 
-        continue-on-error: true 
       
       - name: Test Summary
         uses: test-summary/action@v2
