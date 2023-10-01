@@ -91,6 +91,7 @@ jobs:
         run: |
           ls -l target/**/TEST-*.xml
           cat test-summary.md
+        if: always()
 
   coverage:
     name: Coverage Tests
