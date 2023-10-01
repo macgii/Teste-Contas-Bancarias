@@ -79,51 +79,12 @@ jobs:
         with:
           paths: "target/**/TEST-*.xml"
           output: error.md 
-          show: "error"
+          show: "fail, skip, pass, none"
         if: always()
         
       - name: Read and Append Test Summary
         run: |
           cat error.md >> $GITHUB_STEP_SUMMARY
-        if: always()
-
-      - name: Test Summary
-        uses: test-summary/action@v2
-        with:
-          paths: "target/**/TEST-*.xml"
-          output: fail.md 
-          show: "fail"
-        if: always()
-        
-      - name: Read and Append Test Summary
-        run: |
-          cat fail.md >> $GITHUB_STEP_SUMMARY
-        if: always()
-
-      - name: Test Summary
-        uses: test-summary/action@v2
-        with:
-          paths: "target/**/TEST-*.xml"
-          output: skip.md 
-          show: "skip"
-        if: always()
-        
-      - name: Read and Append Test Summary
-        run: |
-          cat skip.md >> $GITHUB_STEP_SUMMARY
-        if: always()
-
-      - name: Test Summary
-        uses: test-summary/action@v2
-        with:
-          paths: "target/**/TEST-*.xml"
-          output: pass.md 
-          show: "pass"
-        if: always()
-        
-      - name: Read and Append Test Summary
-        run: |
-          cat pass.md >> $GITHUB_STEP_SUMMARY
         if: always()
 
   coverage:
