@@ -39,7 +39,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
       - name: Adding markdown
         run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
@@ -75,8 +75,8 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: "target/**/TEST-*.xml"
+          show: "all"
           output: test-summary.md 
-          show: "all, fail, skip, none, pass"
         if: always()
         
       - name: Read and Append Test Summary
