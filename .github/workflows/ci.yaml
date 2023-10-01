@@ -78,13 +78,13 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: "target/**/TEST-*.xml"
-          output: all.md 
-          show: "all"
+          output: error.md 
+          show: "error"
         if: always()
         
       - name: Read and Append Test Summary
         run: |
-          cat all.md >> $GITHUB_STEP_SUMMARY
+          cat error.md >> $GITHUB_STEP_SUMMARY
         if: always()
 
       - name: Test Summary
@@ -92,7 +92,7 @@ jobs:
         with:
           paths: "target/**/TEST-*.xml"
           output: fail.md 
-          show: "fail, skip, none, pass"
+          show: "fail"
         if: always()
         
       - name: Read and Append Test Summary
