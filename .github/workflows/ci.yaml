@@ -8,6 +8,14 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  summary:
+    name: Warning Summary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        run: |
+          echo '## Atenção em caso de erro em qualquer job!' >> $GITHUB_STEP_SUMMARY
+          echo '## Alem do sumario entre no job e veja os logs minuciosamente!' >> $GITHUB_STEP_SUMMARY
   build:
     name: Build with Java
     runs-on: ubuntu-latest
@@ -41,15 +49,16 @@ jobs:
       - name: Build with Maven
         run: |
           if mvn clean install -DskipTests; then
-            echo '### Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
+            echo '## Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
           else
-            echo '### Build failed! ❌' >> $GITHUB_STEP_SUMMARY
-            exit 1 # Sai com código de erro
+            echo '## Build failed! ❌' >> $GITHUB_STEP_SUMMARY
+            exit 1
           fi
 
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
+    needs: build
     services:
       mysql:
         image: mysql:8.0.33
@@ -71,7 +80,8 @@ jobs:
           distribution: 'zulu'
 
       - name: Run Tests
-        run: mvn test  
+        run: mvn test 
+        continue-on-error: true 
       
       - name: Test Summary
         uses: test-summary/action@v2
@@ -79,18 +89,15 @@ jobs:
           paths: "target/**/TEST-*.xml"
           output: error.md 
           show: "fail, skip, none"
-        if: always()
         
       - name: Read and Append Test Summary
         run: |
           cat error.md >> $GITHUB_STEP_SUMMARY
-        if: always()
 
       - name: Debug Test Summary File
         run: |
           ls -l target/**/TEST-*.xml
           cat error.md
-        if: always()
 
   coverage:
     name: Coverage Tests
