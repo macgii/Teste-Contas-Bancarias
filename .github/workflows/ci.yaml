@@ -75,7 +75,14 @@ jobs:
       - name: Run Tests
         run: mvn test 
         
-      - name: Unit Tests
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "test/results/**/TEST-*.xml"
+          output: test-summary.md >> $GITHUB_STEP_SUMMARY
+        if: always()
+        
+      - name: Test Summary
         run: echo '## Unit Tests Status - Success' >> $GITHUB_STEP_SUMMARY
 
   coverage:
