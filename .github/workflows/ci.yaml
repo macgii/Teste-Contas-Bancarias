@@ -73,7 +73,10 @@ jobs:
           distribution: 'zulu'
       
       - name: Run Tests
-        run: mvn test | grep -E 'Tests run:|Failures:|Errors:|Skipped:' >> $GITHUB_STEP_SUMMARY
+        run: mvn test 
+        
+      - name: Unit Tests
+        run: echo '## Unit Tests Status - Success' >> $GITHUB_STEP_SUMMARY
 
   coverage:
     name: Coverage Tests
@@ -107,6 +110,9 @@ jobs:
 
       - name: Verify Coverage
         run: mvn jacoco:check
+
+      - name: Coverage Tests
+        run: echo '## Coverage Tests Status - Success' >> $GITHUB_STEP_SUMMARY
 
   analysis:
     name: Analysis Quality Gate
