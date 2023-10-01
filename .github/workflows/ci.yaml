@@ -78,15 +78,53 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: "target/**/TEST-*.xml"
-          output: test-summary.md 
-          show: "all, fail, skip, none, pass"
+          output: all.md 
+          show: "all"
         if: always()
         
       - name: Read and Append Test Summary
         run: |
-          cat test-summary.md >> $GITHUB_STEP_SUMMARY
+          cat all.md >> $GITHUB_STEP_SUMMARY
         if: always()
 
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "target/**/TEST-*.xml"
+          output: fail.md 
+          show: "fail, skip, none, pass"
+        if: always()
+        
+      - name: Read and Append Test Summary
+        run: |
+          cat fail.md >> $GITHUB_STEP_SUMMARY
+        if: always()
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "target/**/TEST-*.xml"
+          output: skip.md 
+          show: "skip"
+        if: always()
+        
+      - name: Read and Append Test Summary
+        run: |
+          cat skip.md >> $GITHUB_STEP_SUMMARY
+        if: always()
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "target/**/TEST-*.xml"
+          output: pass.md 
+          show: "pass"
+        if: always()
+        
+      - name: Read and Append Test Summary
+        run: |
+          cat pass.md >> $GITHUB_STEP_SUMMARY
+        if: always()
 
   coverage:
     name: Coverage Tests
