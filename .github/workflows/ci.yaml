@@ -75,7 +75,6 @@ jobs:
         uses: test-summary/action@v2
         with:
           paths: "target/**/TEST-*.xml"
-          show: "all"
           output: test-summary.md 
         if: always()
         
