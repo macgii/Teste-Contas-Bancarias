@@ -70,12 +70,16 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+          
+      - name: Run Tests
+        run: mvn test  
       
       - name: Test Summary
         uses: test-summary/action@v2
         with:
           paths: "target/**/TEST-*.xml"
           output: test-summary.md 
+          show: "all, fail, skip, none, pass"
         if: always()
         
       - name: Read and Append Test Summary
