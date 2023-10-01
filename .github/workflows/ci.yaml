@@ -85,7 +85,7 @@ jobs:
       - name: Read and Append Test Summary
         run: |
           cat test-summary.md >> $GITHUB_STEP_SUMMARY
-        continue-on-error: true
+        if: always()
 
 
   coverage:
