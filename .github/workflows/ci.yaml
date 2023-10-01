@@ -70,7 +70,7 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
-          
+
       - name: Run Tests
         run: mvn test  
       
@@ -85,6 +85,7 @@ jobs:
       - name: Read and Append Test Summary
         run: |
           cat test-summary.md >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
 
 
   coverage:
