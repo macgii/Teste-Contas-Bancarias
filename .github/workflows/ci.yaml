@@ -77,16 +77,9 @@ jobs:
       - name: Test Summary
         uses: test-summary/action@v2
         with:
-          paths: "test/results/**/TEST-*.xml"
+          paths: "target/**/TEST-*.xml"
           output: test-summary.md 
         if: always()
-
-      - name: Read and Append Test Summary
-        run: | 
-          cat test-summary.md >> $GITHUB_STEP_SUMMARY
-        
-      - name: Test Summary
-        run: echo '## Unit Tests Status - Success' >> $GITHUB_STEP_SUMMARY
 
   coverage:
     name: Coverage Tests
