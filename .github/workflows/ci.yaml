@@ -71,9 +71,6 @@ jobs:
           java-version: 17
           distribution: 'zulu'
       
-      - name: Run Tests
-        run: mvn test 
-        
       - name: Test Summary
         uses: test-summary/action@v2
         with:
