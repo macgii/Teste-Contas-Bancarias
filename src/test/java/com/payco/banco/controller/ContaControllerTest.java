@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.payco.banco.model.Conta;
-import com.payco.banco.model.ContaDTO;
 import com.payco.banco.repository.ContaRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -43,14 +41,14 @@ class ContaControllerTest {
 		ResponseEntity<List<Conta>> resposta = testRestTemplate.exchange("/contas", HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Conta>>() {
 				});
-		assertEquals(HttpStatus.NON_AUTHORITATIVE_INFORMATION, resposta.getStatusCode(), "Status Code da lista de contas deve ser igual");
+		assertEquals(HttpStatus.OK, resposta.getStatusCode(), "Status Code da lista de contas deve ser igual");
 	}
 
 	@Test
 	@DisplayName("Método que busca conta por Id - getById()")
 	void getById() {
 		
-		HttpEntity<List<ContaDTO>> requisicao = null;
+		HttpEntity<Conta> requisicao = new HttpEntity<Conta>(new Conta(null, "Catarina", 12394508401L, 87667321, 2800));
 		ResponseEntity<Conta> resposta = testRestTemplate.exchange("/contas", HttpMethod.POST, requisicao, Conta.class);
 		assertEquals(HttpStatus.CREATED, resposta.getStatusCode(), "Status Code da conta criada deve ser igual");
 
@@ -72,9 +70,9 @@ class ContaControllerTest {
 	@DisplayName("Método criar para conta - criarConta()")
 	void criarConta() {
 
-		HttpEntity<ContaDTO> requisicao = new HttpEntity<ContaDTO>(new ContaDTO());
+		HttpEntity<Conta> requisicao = new HttpEntity<Conta>(new Conta(null, "Catarina", 12394508402L, 87667322, 2800));
 		ResponseEntity<Conta> resposta = testRestTemplate.exchange("/contas", HttpMethod.POST, requisicao, Conta.class);
-		throw new RuntimeException("Este é um erro de exemplo");
+		assertEquals(HttpStatus.CREATED, resposta.getStatusCode(), "Status Code da conta criada deve ser igual");
 	}
 
 	@Test
@@ -92,7 +90,7 @@ class ContaControllerTest {
 		assertEquals(HttpStatus.CREATED, resposta1.getStatusCode(), "Status Code da conta deve ser igual");
 
 	}
-	@Disabled
+
 	@Test
 	@DisplayName("Método que exlcluí conta por Id - deletar()")
 	void deletar() {
