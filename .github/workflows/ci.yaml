@@ -125,38 +125,11 @@ jobs:
         run: mvn jacoco:report
 
       - name: Verify Coverage
-        run: mvn jacoco:check
+        run: mvn jacoco:check >> output.txt
 
       - name: Coverage Tests
-        run: echo '## Coverage Tests Status - Success' >> $GITHUB_STEP_SUMMARY
-        if: always()
-
-      - name: Verify Coverage
         run: |
-          mvn jacoco:check | tee jacoco_check_output.txt
-
-          # Extrair a porcentagem geral de cobertura
-          COVERAGE_RESULT=$(grep "Overall coverage rate:" jacoco_check_output.txt | awk '{print $NF}')
-
-          if [ -n "$COVERAGE_RESULT" ]; then
-            echo "Overall Coverage: $COVERAGE_RESULT."
-            # Extrair informações adicionais ou executar ações adicionais em caso de sucesso.
-          else
-            echo "Failed to extract overall coverage information."
-            # Extrair informações adicionais ou executar ações adicionais em caso de falha.
-          fi
-
-          # Extrair a cobertura de código por pacote e exibir nome do pacote e porcentagem
-          PACKAGES_COVERAGE=$(grep -A 99999 "Reported coverage by package:" jacoco_check_output.txt | grep -oP '(?<=\[)[^\]]+' | sed 's/\[INFO\] //' | awk '{printf "%s %s\n", $1, $2}')
-
-          if [ -n "$PACKAGES_COVERAGE" ]; then
-            echo "Coverage by package:"
-            echo "$PACKAGES_COVERAGE"
-            # Extrair informações adicionais ou executar ações adicionais em caso de sucesso.
-          else
-            echo "Failed to extract coverage by package information."
-            # Extrair informações adicionais ou executar ações adicionais em caso de falha.
-          fi
+          cat output.txt >> $GITHUB_STEP_SUMMARY
         if: always()
 
   analysis:
