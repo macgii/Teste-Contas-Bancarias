@@ -97,7 +97,7 @@ jobs:
   coverage:
     name: Coverage Tests
     runs-on: ubuntu-latest
-    needs: test
+    #needs: test
     services:
       mysql:
         image: mysql:8.0.33
@@ -131,6 +131,23 @@ jobs:
         run: |
           cat output.txt >> $GITHUB_STEP_SUMMARY
         if: always()
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: "target/**/TEST-*.xml"
+          badge: true
+          format: 'markdown'
+          output: 'both'
+      
+      - name: Verify Coverage
+        run: ls -la
+
+        #**Taxa Mínima Esperada Por Pacote:** ![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)
+  
+        #**Aviso:** Regra violada para o(s) pacote(s) abaixo:
+
+        #package `com.payco.banco.controller`: ![Cobertura](https://progress-bar.dev/80/?scale=100&title=Coverage%20&width=200&suffix=%)
 
   analysis:
     name: Analysis Quality Gate
@@ -187,18 +204,18 @@ jobs:
           DUPLICATIONS=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_duplicated_lines_density").status')
 
           if [ "$QUALITY_GATE_STATUS" == "OK" ]; then
-            QUALITY_GATE_STATUS="Passed"
+            QUALITY_GATE_STATUS="Passed" >> $GITHUB_STEP_SUMMARY
           else
-            QUALITY_GATE_STATUS="Failed"
+            QUALITY_GATE_STATUS="Failed" >> $GITHUB_STEP_SUMMARY
           fi
 
-          echo "Quality Gate: $QUALITY_GATE_STATUS"
-          echo "Reliability: $RELIABILITY"
-          echo "Security: $SECURITY"
-          echo "Maintainability: $MAINTAINABILITY"
-          echo "Security Review: $SECURITY_REVIEW"
-          echo "Coverage: $COVERAGE"
-          echo "Duplications: $DUPLICATIONS"
+          echo "Quality Gate: $QUALITY_GATE_STATUS" >> $GITHUB_STEP_SUMMARY
+          echo "Reliability: $RELIABILITY" >> $GITHUB_STEP_SUMMARY
+          echo "Security: $SECURITY" >> $GITHUB_STEP_SUMMARY
+          echo "Maintainability: $MAINTAINABILITY" >> $GITHUB_STEP_SUMMARY
+          echo "Security Review: $SECURITY_REVIEW" >> $GITHUB_STEP_SUMMARY
+          echo "Coverage: $COVERAGE" >> $GITHUB_STEP_SUMMARY
+          echo "Duplications: $DUPLICATIONS" >> $GITHUB_STEP_SUMMARY
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
