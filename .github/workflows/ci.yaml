@@ -123,15 +123,7 @@ jobs:
 
       - name: Extract JaCoCo report
         run: mvn jacoco:report
-
-      - name: Verify Coverage
-        run: mvn jacoco:check >> output.txt
-
-      - name: Coverage Tests
-        run: |
-          cat output.txt >> $GITHUB_STEP_SUMMARY
-        if: always()
-
+      
       - name: Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
@@ -142,6 +134,14 @@ jobs:
       
       - name: Verify Coverage
         run: ls -la
+
+      - name: Verify Coverage
+        run: mvn jacoco:check >> output.txt
+
+      - name: Coverage Tests
+        run: |
+          cat output.txt >> $GITHUB_STEP_SUMMARY
+        if: always()
 
         #**Taxa Mínima Esperada Por Pacote:** ![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)
   
