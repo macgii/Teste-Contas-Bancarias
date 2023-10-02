@@ -129,6 +129,7 @@ jobs:
 
       - name: Coverage Tests
         run: echo '## Coverage Tests Status - Success' >> $GITHUB_STEP_SUMMARY
+        if: always()
 
       - name: Verify Coverage
         run: |
@@ -156,7 +157,7 @@ jobs:
             echo "Failed to extract coverage by package information."
             # Extrair informações adicionais ou executar ações adicionais em caso de falha.
           fi
-
+        if: always()
 
   analysis:
     name: Analysis Quality Gate
