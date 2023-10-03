@@ -44,10 +44,10 @@ jobs:
       - name: Armazenar versões em variáveis
         run: |
           if ${{ matrix.branch }} == main; then
-            main_version="$${ steps.actions_project_version_check.outputs.version }}"
+            main_version="$${ steps.actions_project_version_check.outputs.main.version }}"
             echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
           else
-            develop_version="${ steps.actions_project_version_check.outputs.version }}"
+            develop_version="${ steps.actions_project_version_check.outputs.develop.version }}"
             echo "DEVELOP_VERSION=$develop_version" >> $GITHUB_ENV
           fi
 
