@@ -45,8 +45,8 @@ jobs:
         run: |
           main_version="${{ steps.actions_project_version_check_main.outputs.version }}"
           develop_version="${{ steps.actions_project_version_check_develop.outputs.version }}"
-          echo "::set-env name=MAIN_VERSION::$main_version"
-          echo "::set-env name=DEVELOP_VERSION::$develop_version"
+          echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
+          echo "DEVELOP_VERSION=$develop_version" >> $GITHUB_ENV
 
   compare-versions:
     needs: check_versions
