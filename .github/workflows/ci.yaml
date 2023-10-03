@@ -41,17 +41,32 @@ jobs:
       - name: Armazenar versão da branch ${{ matrix.branch }}
         run: echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
 
-      - name: Comparar versões
+      - name: Armazenar versões em variáveis
         run: |
-          main_version="${{ env.branch_main_version }}"
-          develop_version="${{ env.branch_develop_version }}"
+          main_version="${{ steps.actions_project_version_check_main.outputs.version }}"
+          develop_version="${{ steps.actions_project_version_check_develop.outputs.version }}"
+          echo "::set-env name=MAIN_VERSION::$main_version"
+          echo "::set-env name=DEVELOP_VERSION::$develop_version"
 
-          if [[ "$main_version" == "$develop_version" ]]; then
-            echo "As versões em main e develop são iguais: $main_version"
-          elif [[ "$main_version" > "$develop_version" ]]; then
-            echo "A versão em main ($main_version) é maior do que em develop ($develop_version)"
+  compare-versions:
+    needs: check-versions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comparar versões e tomar ação
+        run: |
+          main_version="${{ env.MAIN_VERSION }}"
+          develop_version="${{ env.DEVELOP_VERSION }}"
+          
+          if [ "$main_version" == "$develop_version" ]; then
+            echo "As versões em main ($main_version) e develop ($develop_version) são iguais."
+            # Adicione ação aqui se as versões forem iguais
+          elif [ "$main_version" \> "$develop_version" ]; then
+            echo "A versão em main ($main_version) é maior do que em develop ($develop_version)."
+            # Adicione ação aqui se a versão em main for maior
           else
-            echo "A versão em develop ($develop_version) é maior do que em main ($main_version)"
+            echo "A versão em develop ($develop_version) é maior do que em main ($main_version)."
+            # Adicione ação aqui se a versão em develop for maior
           fi
 
   build:
