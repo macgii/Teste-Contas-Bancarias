@@ -180,27 +180,8 @@ jobs:
       - name: Verify Coverage
         run: ls -la
         
-      - name: Instalar pandoc
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc
-
-      - name: Converter HTML para Markdown
-        run: |
-          pandoc -s target/site/jacoco/index.html -o report.md
-
-      - name: Coverage Tests
-        run: |
-          cat report.md >> $GITHUB_STEP_SUMMARY
-        if: always()
-
       - name: Verify Coverage
-        run: mvn jacoco:check >> output.txt
-
-      - name: Coverage Tests
-        run: |
-          cat output.txt >> $GITHUB_STEP_SUMMARY
-        if: always()
+        run: mvn jacoco:check >> output.txt >> $GITHUB_STEP_SUMMARY
 
         #**Taxa Mínima Esperada Por Pacote:** ![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)
   
