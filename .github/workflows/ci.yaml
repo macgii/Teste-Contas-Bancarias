@@ -134,7 +134,12 @@ jobs:
 
       - name: Converter HTML para Markdown
         run: |
-          pandoc -s seu-arquivo.html -o seu-arquivo.md
+          pandoc -s target/site/jacoco/index.html -o report.md
+
+      - name: Coverage Tests
+        run: |
+          cat report.md >> $GITHUB_STEP_SUMMARY
+        if: always()
 
       - name: Verify Coverage
         run: mvn jacoco:check >> output.txt
