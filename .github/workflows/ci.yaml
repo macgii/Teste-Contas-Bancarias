@@ -46,7 +46,7 @@ jobs:
           if ${{ matrix.branch }} == main; then
             main_version="$${ steps.actions_project_version_check.outputs.version }}"
             echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
-          elif ${{ matrix.branch }} == develop; then
+          else
             develop_version="${ steps.actions_project_version_check.outputs.version }}"
             echo "DEVELOP_VERSION=$develop_version" >> $GITHUB_ENV
           fi
