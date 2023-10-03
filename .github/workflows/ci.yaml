@@ -123,26 +123,18 @@ jobs:
 
       - name: Extract JaCoCo report
         run: mvn jacoco:report
-      
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: "target/**/TEST-*.xml"
-          badge: true
-          format: 'markdown'
-          output: 'both'
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          recreate: true
-          path: code-coverage-results.md
-
-      - name: Write to Job Summary
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
-      
+          
       - name: Verify Coverage
         run: ls -la
+        
+      - name: Instalar pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc
+
+      - name: Converter HTML para Markdown
+        run: |
+          pandoc -s seu-arquivo.html -o seu-arquivo.md
 
       - name: Verify Coverage
         run: mvn jacoco:check >> output.txt
