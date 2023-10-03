@@ -309,7 +309,7 @@ jobs:
   deploy:
     name: Deploy Dockerhub
     runs-on: ubuntu-latest
-    needs: [analysis, coverage, docker_build]
+    needs: [analysis, coverage, docker_build, compare_versions]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
