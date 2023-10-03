@@ -38,9 +38,22 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           file-to-check: pom.xml
 
-      - name: Usar versão da branch ${{ matrix.branch }}
-        run: echo "Versão na branch ${{ matrix.branch }} ${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
-  
+      - name: Armazenar versão da branch ${{ matrix.branch }}
+        run: echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Comparar versões
+        run: |
+          main_version="${{ env.branch_main_version }}"
+          develop_version="${{ env.branch_develop_version }}"
+
+          if [[ "$main_version" == "$develop_version" ]]; then
+            echo "As versões em main e develop são iguais: $main_version"
+          elif [[ "$main_version" > "$develop_version" ]]; then
+            echo "A versão em main ($main_version) é maior do que em develop ($develop_version)"
+          else
+            echo "A versão em develop ($develop_version) é maior do que em main ($main_version)"
+          fi
+
   build:
     name: Build with Java
     runs-on: ubuntu-latest
