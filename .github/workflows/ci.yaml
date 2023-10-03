@@ -16,9 +16,10 @@ jobs:
         run: |
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
-  check-versions:
-    runs-on: ubuntu-latest
 
+  check_versions:
+    name: Semantic Version
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         branch:
@@ -27,7 +28,7 @@ jobs:
           # Adicione outras branches aqui, se necessário
 
     steps:
-      - name: Checkout código
+      - name: Checkout codigo
         uses: actions/checkout@v2
 
       - name: Verificar versão na branch ${{ matrix.branch }}
