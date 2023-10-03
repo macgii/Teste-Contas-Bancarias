@@ -16,6 +16,43 @@ jobs:
         run: |
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
+
+  compare_versions:
+    name: Semantic Version
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout código-fonte
+      uses: actions/checkout@v2
+
+    - name: Extrair a versão do Pom.xml da branch main
+      run: |
+        main_version=$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)
+        echo "Versão do Pom.xml da branch main: $main_version"
+        echo "::set-output name=main_version::$main_version"
+      id: extract_main_version
+
+    - name: Checkout a branch develop
+      run: git checkout develop
+
+    - name: Extrair a versão do Pom.xml da branch develop
+      run: |
+        develop_version=$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)
+        echo "Versão do Pom.xml da branch develop: $develop_version"
+        echo "::set-output name=develop_version::$develop_version"
+      id: extract_develop_version
+
+    - name: Comparar as versões
+      run: |
+        main_version_value="${{ steps.extract_main_version.outputs.main_version }}"
+        develop_version_value="${{ steps.extract_develop_version.outputs.develop_version }}"
+        
+        if [ "$develop_version_value" \> "$main_version_value" ]; then
+          echo "Sucesso: A versão na branch develop é maior que a versão na branch main."
+        else
+          echo "Erro: A versão na branch develop não é maior que a versão na branch main."
+          exit 1
+        fi
+
   build:
     name: Build with Java
     runs-on: ubuntu-latest
