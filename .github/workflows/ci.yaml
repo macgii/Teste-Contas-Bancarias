@@ -35,26 +35,20 @@ jobs:
         uses: avides/actions-project-version-check@v1.4.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          file-to-check: pom.xml
+          file-to-check: git show main:pom.xml
 
-  trocar-para-develop:
-    runs-on: ubuntu-latest
+      - name: Armazenar versão da branch ${{ matrix.branch }}
+        run: echo "branch_$GITHUB_REF_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
 
-    steps:
-      - name: Check out código
-        uses: actions/checkout@v2
-      
-      - name: mostrar pom.xml
+      - name: Armazenar versões em variáveis
         run: |
-          cat pom.xml
-
-      - name: Trocar para a branch develop
-        run: |
-          git checkout main
-
-      - name: mostrar pom.xml
-        run: |
-          cat pom.xml
+          if ${{ matrix.branch }} == $GITHUB_REF; then
+            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "MAIN_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
+          else
+            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "DEVELOP_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
+          fi
 
   compare-versions:
     needs: check_versions
