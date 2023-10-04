@@ -349,12 +349,19 @@ jobs:
           #  echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
           #  echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
 
-        - name: Display GitHub Information
+        - name: Extract and Display Commit Info
           run: |
-            echo "| Author  | Commits | Files Changed | Files Removed |"
-            echo "|:--------|:-------:|:-------------:|:-------------|"
-            git log --format="%an|%h|$(git diff --numstat HEAD~1 HEAD | awk '{filesChanged+=$1; removed+=$2} END {printf("%d|%d", filesChanged, removed)}')|" --abbrev-commit --no-merges | \
-              awk -F'|' 'NR > 1 {printf("| @%s | %s | %s | %s |\n", $1, $2, $3, $4)}' >> "$GITHUB_STEP_SUMMARY"
+            branch=$(git rev-parse --abbrev-ref HEAD)
+            author=$(git log -1 --format='%an')
+            changes=$(git log -1 --format='%h %s' --numstat)
+            changestotal=$(echo "$changes" | wc -l)
+            additions=$(echo "$changes" | awk '{ sum += $1 } END { print sum }')
+            deletions=$(echo "$changes" | awk '{ sum += $2 } END { print sum }')
+            commit=$(git log -1 --format='%h')
+
+            echo "| Branch  | Author  | Changed Files | Additions  | Deletions  | Commit  |" >> $GITHUB_STEP_SUMMARY
+            echo "|:--------|:--------|:--------------|:-----------|:-----------|:--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $branch | $author | $changestotal | $additions | $deletions | $commit |" >> $GITHUB_STEP_SUMMARY
 
           
 
