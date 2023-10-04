@@ -8,6 +8,29 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - id: step1
+        run: echo "test=hello" >> $GITHUB_OUTPUT
+
+      - id: step2
+        run: echo "test=world" >> $GITHUB_OUTPUT
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Set up environment variables
+        run: |
+          OUTPUTS=$(cat $GITHUB_OUTPUT)
+          OUTPUT1=$(echo "$OUTPUTS" | grep -oP 'output1=\K[^ ]+')
+          OUTPUT2=$(echo "$OUTPUTS" | grep -oP 'output2=\K[^ ]+')
+
+          echo "OUTPUT1: $OUTPUT1"
+          echo "OUTPUT2: $OUTPUT2"
+
   summary:
     name: Warning
     runs-on: ubuntu-latest
