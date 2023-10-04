@@ -18,7 +18,7 @@ jobs:
         - name: Check Project Version
           run: cat .github/workflows/git.yaml
 
-        - uses: .github/workflows/git.yaml
+        - uses: ./.github/workflows/git.yaml
   summary:
     name: Warning
     runs-on: ubuntu-latest
