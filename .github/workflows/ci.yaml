@@ -56,6 +56,12 @@ jobs:
             echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
           fi
 
+      - name: echo
+        run: |
+          echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
+          echo "MAIN_VERSION=${{ env.MAIN_VERSION }}"
+          echo "ATUAL_VERSION=${{ env.ATUAL_VERSION }}"
+
   compare-versions:
     needs: check_versions
     runs-on: ubuntu-latest
