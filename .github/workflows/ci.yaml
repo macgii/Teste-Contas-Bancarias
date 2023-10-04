@@ -155,7 +155,7 @@ jobs:
           else
             echo '**Aviso:** Regra violada abaixo:' >> $GITHUB_STEP_SUMMARY
             echo '**Taxa Mínima Esperada Por Pacote:**' >> $GITHUB_STEP_SUMMARY
-            echo '![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
+            echo '![Cobertura](https://progress-bar.dev/80/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
 
