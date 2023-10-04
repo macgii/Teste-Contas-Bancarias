@@ -24,9 +24,8 @@ jobs:
     steps:
       - name: Set up environment variables
         run: |
-          OUTPUTS=$(cat $GITHUB_OUTPUT)
-          OUTPUT1=$(echo "$OUTPUTS" | grep -oP 'output1=\K[^ ]+')
-          OUTPUT2=$(echo "$OUTPUTS" | grep -oP 'output2=\K[^ ]+')
+          OUTPUT1=${{ needs.job1.outputs.step1 }}
+          OUTPUT2=${{ needs.job1.outputs.step2 }}
 
           echo "OUTPUT1: $OUTPUT1"
           echo "OUTPUT2: $OUTPUT2"
