@@ -48,15 +48,15 @@ jobs:
           echo "matrix_branch_${{ matrix.branch }}"
           echo "matrix_branch_with_prefix_${{ env.matrix_branch_with_prefix }}"
           echo "github_ref_${{ env.matrix_branch_with_prefix }}"
-          
+
       - name: Armazenar versões em variáveis
         run: |
-          if [ ${{ env.matrix_branch_with_prefix != github.ref }} ]; then
-            atual_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
-          else
+          if [ "${{ matrix.branch }}" == "main" ]; then
             main_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
+          else
+            atual_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
           fi
 
       - name: echo
