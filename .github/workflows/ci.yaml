@@ -331,3 +331,25 @@ jobs:
           echo '### <center>Fique atento em caso de erro em qualquer job! ⚠️</center>' >> $GITHUB_STEP_SUMMARY
           echo '<center>Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻</center>' >> $GITHUB_STEP_SUMMARY
 
+  display_info:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Display GitHub Information
+          run: |
+            echo "| Name               | Value                                |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------------------|--------------------------------------|" >> $GITHUB_STEP_SUMMARY
+            echo "| GitHub Ref         | $GITHUB_REF                          |" >> $GITHUB_STEP_SUMMARY
+            echo "| Branch Name        | ${GITHUB_REF#refs/heads/}            |" >> $GITHUB_STEP_SUMMARY
+            echo "| Event Name         | $GITHUB_EVENT_NAME                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Actor              | $GITHUB_ACTOR                        |" >> $GITHUB_STEP_SUMMARY
+            echo "| Commit SHA         | $GITHUB_SHA                          |" >> $GITHUB_STEP_SUMMARY
+            echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
+
+            echo "| Author | Commits | Files Changed | Files Removed | Commit Message |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|---------|---------------|---------------|----------------|" >> $GITHUB_STEP_SUMMARY
+            git log --format="| %an | %h | $(git diff --numstat HEAD~1 HEAD | awk '{filesChanged+=$1; removed+=$2} END {print filesChanged, removed}')" --abbrev-commit --stat --no-merges >> $GITHUB_STEP_SUMMARY
