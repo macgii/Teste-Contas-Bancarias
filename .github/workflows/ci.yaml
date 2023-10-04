@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Summary
         run: |
-          echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
-          echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
+          echo '### <center>Fique atento em caso de erro em qualquer job! ⚠️</center>' >> $GITHUB_STEP_SUMMARY
+          echo '<center>Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻</center>' >> $GITHUB_STEP_SUMMARY
 
   check_versions:
     name: Semantic Version
