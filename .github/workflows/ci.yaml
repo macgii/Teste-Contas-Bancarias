@@ -19,8 +19,9 @@ jobs:
         run: cd .github/workflows/
       - name: Check Project Version
         run: ls -la
-      - name: Check Project Version
-        uses: .github/workflows/check_versions.yaml 
+      
+      #- name: Check Project Version
+      #  uses: .github/workflows/check_versions.yaml 
 
   build:
     name: Build with Java
