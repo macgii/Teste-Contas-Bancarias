@@ -351,9 +351,10 @@ jobs:
 
         - name: Display GitHub Information
           run: |
-            echo "| Author | Commits | Files Changed | Files Removed | >> $GITHUB_STEP_SUMMARY
-            echo "|--------|---------|---------------|---------------| >> $GITHUB_STEP_SUMMARY
+            echo "| Author  | Commits | Files Changed | Files Removed |"
+            echo "|:--------|:-------:|:-------------:|:-------------|"
             git log --format="%an|%h|$(git diff --numstat HEAD~1 HEAD | awk '{filesChanged+=$1; removed+=$2} END {printf("%d|%d", filesChanged, removed)}')|" --abbrev-commit --no-merges | \
-              awk -F'|' 'NR > 1 {printf("| @%s | %s | %s | %s |\n", $1, $2, $3, $4)}' >> $GITHUB_STEP_SUMMARY
+              awk -F'|' 'NR > 1 {printf("| @%s | %s | %s | %s |\n", $1, $2, $3, $4)}' >> "$GITHUB_STEP_SUMMARY"
+
           
 
