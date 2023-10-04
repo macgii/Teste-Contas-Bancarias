@@ -40,4 +40,4 @@ jobs:
   check_versions:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/check_versions.yaml@test-ci
       with:
-          token: gituhub.token
+          token: github.token
