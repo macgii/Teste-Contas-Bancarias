@@ -67,6 +67,9 @@ jobs:
             echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
 
+      - name: echo
+        run: git status
+
   compare-versions:
     needs: check_versions
     runs-on: ubuntu-latest
