@@ -58,7 +58,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check Project Version
         uses: .github/workflows/analysis.yaml
-
   publish:
     name: Publish Image Dockerhub
     runs-on: ubuntu-latest
