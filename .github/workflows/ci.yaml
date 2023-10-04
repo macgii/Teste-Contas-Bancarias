@@ -39,3 +39,5 @@ jobs:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/publish_docker.yaml@test-ci
   check_versions:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/check_versions.yaml@test-ci
+      with:
+          token: ${{ secrets.GIT_TOKEN }}
