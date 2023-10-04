@@ -43,47 +43,21 @@ jobs:
       - name: Armazenar versões em variáveis
         run: |
           if [ "${{ matrix.branch }}" == "main" ]; then
-            main_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
+            echo "MAIN_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_OUTPUT
           else
-            atual_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
+            echo "CURRENT_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_OUTPUT
           fi
 
   compare-versions:
     needs: check_versions
     runs-on: ubuntu-latest
-
     steps:
-      - name: Comparar versões e tomar ação
+      - name: Get Versions from Outputs
         run: |
-          main_version="${{ env.MAIN_VERSION }}"
-          atual_version="${{ env.ATUAL_VERSION }}"
-
-      - uses: actions/checkout@v3
-      - name: Check if version is updated
-        uses: avides/actions-project-version-check@v1.3
-        id: actions_project_version_check
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
-          file-to-check: pom.xml
-          only-return-version: true
-        continue-on-error: true
-
-      - name: Versioning specifications
-        if: steps.actions_project_version_check.outcome != 'success'
-        uses: thollander/actions-comment-pull-request@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          message: Project version has not been updated in pom.xml. Please, update your version using https://semver.org specifications.
-      
-      - name: Exit if fails
-        if: steps.actions_project_version_check.outcome != 'success'
-        uses: cutenode/action-always-fail@v1
-
-      - name: New software version
-        if: steps.actions_project_version_check.outcome == 'success'
-        run: echo "New software version is " ${{ steps.actions_project_version_check.outputs.version }}       
+          main_version="${{ needs.check_version.outputs.main_version }}"
+          current_version="${{ needs.check_version.outputs.current_version }}"
+          echo "Main Version: $main_version"
+          echo "Current Version: $current_version"
 
   build:
     name: Build with Java
