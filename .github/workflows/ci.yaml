@@ -23,8 +23,8 @@ jobs:
     strategy:
       matrix:
         branch:
-          - teste-ci
           - main
+          - '*'
 
 
     steps:
@@ -50,12 +50,12 @@ jobs:
         run: |
           if ${{ matrix.branch }} == main; then
             ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
-          elif ${{ matrix.branch }} != main; then
-            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
+          else
+            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
-          
+
   compare-versions:
     needs: check_versions
     runs-on: ubuntu-latest
