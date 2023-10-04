@@ -7,8 +7,6 @@ jobs:
   publish:
     name: Publish Image Dockerhub
     runs-on: ubuntu-latest
-    needs: [analysis, coverage, docker_build, check_versions]
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

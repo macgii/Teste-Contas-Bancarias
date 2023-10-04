@@ -22,14 +22,20 @@ jobs:
   build:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/build.yaml@test-ci
   test:
+      needs: build
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/test.yaml@test-ci
   coverage:
+      needs: test
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/coverage.yaml@test-ci
   analysis:
+      needs: test
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/analysis.yaml@test-ci
   docker_build:
+      needs: test
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/build_docker.yaml@test-ci
   publish:
+      needs: [analysis, coverage, docker_build, check_versions]
+      if: github.ref == 'refs/heads/main'
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/publish_docker.yaml@test-ci
   check_versions:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/check_versions.yaml@test-ci
