@@ -17,9 +17,6 @@ jobs:
           - main
           - test-ci
     steps:
-      - name: Add 'refs/heads/' prefix to matrix.branch
-        run: echo "matrix_branch_with_prefix=refs/heads/${{ matrix.branch }}" >> $GITHUB_ENV
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
@@ -34,10 +31,10 @@ jobs:
       - name: Armazenar versões em variáveis
         run: |
           if [ "${{ matrix.branch }}" == "main" ]; then
-            echo "### Branch Scan - ${{ matrix.branch }}" >> $GITHUB_STEP_SUMMARY
+            echo "### Branch Scan - ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
             echo "MAIN_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           else
-            echo "### Branch Scan - ${{ matrix.branch }}" >> $GITHUB_STEP_SUMMARY
+            echo "### Branch Scan - ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
             echo "CURRENT_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           fi
 
