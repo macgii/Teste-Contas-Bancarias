@@ -27,12 +27,19 @@ jobs:
           - teste-ci
 
     steps:
+
+      - name: v
+        run: ls -a
+
       - name: Checkout codigo
         uses: actions/checkout@v3
+        
+      - name: v
+        run: ls -a
 
-      #- name: Salvar conteúdo do pom.xml em um novo arquivo
-      #  run: |
-      ##    git show ${{ matrix.branch }}:pom.xml > testpom.xml
+      - name: Salvar conteúdo do pom.xml em um novo arquivo
+        run: |
+          git show ${{ matrix.branch }}:pom.xml > testpom.xml
 
       - name: Verificar versão na branch ${{ matrix.branch }}
         id: actions_project_version_check
