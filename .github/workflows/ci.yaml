@@ -28,20 +28,9 @@ jobs:
 
 
     steps:
-
-      - name: v
-        run: ls -a
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
-        
-      - name: v
-        run: ls -a
-
-      - name:  conteúdo do pom.xml 
-        run: |
-          cat pom.xml
 
       - name: Verificar versão na branch ${{ matrix.branch }}
         id: actions_project_version_check
@@ -62,13 +51,10 @@ jobs:
           if ${{ matrix.branch }} == main; then
             ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
-          else
+          if ${{ matrix.branch }} != main; then
             ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
-
-      - name: echo
-        run: git status
 
   compare-versions:
     needs: check_versions
