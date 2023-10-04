@@ -10,18 +10,8 @@ on:
 jobs:
   display:
       name: PR information
-      runs-on: ubuntu-latest
-      steps:
+      uses: macgii/Teste-Contas-Bancarias/blob/test-ci/.github/workflows/git.yaml
 
-        
-        - name: Summary
-          uses: actions/checkout@v4
-
-        - name: Check Project Version
-          run: cat .github/workflows/git.yaml
-
-        - name: Summary
-          uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml@teste-ci
   summary:
     name: Warning
     runs-on: ubuntu-latest
