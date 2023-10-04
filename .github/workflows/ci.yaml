@@ -9,7 +9,7 @@ on:
 
 jobs:
   check_versions:
-    name: Semantic Version
+    name: Project Version
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -51,7 +51,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -91,7 +91,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -119,7 +119,7 @@ jobs:
   coverage:
     name: Coverage Tests
     runs-on: ubuntu-latest
-    #needs: test
+    needs: test
     services:
       mysql:
         image: mysql:8.0.33
@@ -130,7 +130,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -145,18 +145,14 @@ jobs:
 
       - name: Extract JaCoCo report
         run: mvn jacoco:report
-          
-      - name: Verify Coverage
-        run: ls -la
         
       - name: Verify Coverage
-        run: mvn jacoco:check >> output.txt >> $GITHUB_STEP_SUMMARY
-
-        #**Taxa Mínima Esperada Por Pacote:** ![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)
-  
-        #**Aviso:** Regra violada para o(s) pacote(s) abaixo:
-
-        #package `com.payco.banco.controller`: ![Cobertura](https://progress-bar.dev/80/?scale=100&title=Coverage%20&width=200&suffix=%)
+        run: mvn jacoco:check; then
+            echo 'Coveraged 80% per package successful! 🚀' >> $GITHUB_STEP_SUMMARY
+          else
+            echo '**Aviso:** Regra violada abaixo:' >> $GITHUB_STEP_SUMMARY
+            echo '**Taxa Mínima Esperada Por Pacote:** ![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
+            exit 1
 
   analysis:
     name: Analysis Quality Gate
@@ -172,7 +168,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
