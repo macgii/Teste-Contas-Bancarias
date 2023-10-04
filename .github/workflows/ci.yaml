@@ -11,34 +11,9 @@ jobs:
   check_versions:
     name: Project Version
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        branch:
-          - main
-          - test-ci
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ matrix.branch }}
-
-      - name: Verificar versão na branch ${{ matrix.branch }}
-        id: actions_project_version_check
-        uses: avides/actions-project-version-check@v1.4.0
-        with:
-          token: ${{ secrets.GIT_TOKEN }}
-          file-to-check: pom.xml
-
-      - name: Armazenar versões em variáveis
-        run: |
-          if [ "${{ matrix.branch }}" == "main" ]; then
-            echo '| Branch Scan   | Project Version |' >> $GITHUB_STEP_SUMMARY
-            echo '| :------------ | :-------------: |' >> $GITHUB_STEP_SUMMARY
-            echo '| ${{ matrix.branch }} | ${{ steps.actions_project_version_check.outputs.version }} |' >> $GITHUB_STEP_SUMMARY
-          else
-            echo '| Branch Scan   | Project Version |' >> $GITHUB_STEP_SUMMARY
-            echo '| :------------ | :-------------: |' >> $GITHUB_STEP_SUMMARY
-            echo '| ${{ github.ref_name }} | ${{ steps.actions_project_version_check.outputs.version }} |' >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: Check Project Version
+        uses: ./verify_version.yml 
 
   build:
     name: Build with Java
@@ -342,12 +317,10 @@ jobs:
           run: |
             echo "| Name               | Value                                |" >> $GITHUB_STEP_SUMMARY
             echo "|--------------------|--------------------------------------|" >> $GITHUB_STEP_SUMMARY
-            echo "| GitHub Ref         | $GITHUB_REF                          |" >> $GITHUB_STEP_SUMMARY
-            echo "| Branch Name        | ${GITHUB_REF#refs/heads/}            |" >> $GITHUB_STEP_SUMMARY
-            echo "| Event Name         | $GITHUB_EVENT_NAME                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
             echo "| Actor              | $GITHUB_ACTOR                        |" >> $GITHUB_STEP_SUMMARY
             echo "| Commit SHA         | $GITHUB_SHA                          |" >> $GITHUB_STEP_SUMMARY
-            echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Event Name         | $GITHUB_EVENT_NAME                   |" >> $GITHUB_STEP_SUMMARY
             echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
 
         - name: Extract and Display Commit Info
@@ -360,8 +333,8 @@ jobs:
             additions=$(echo "$changes" | awk '{ sum += $1 } END { print sum }')
             deletions=$(echo "$changes" | awk '{ sum += $2 } END { print sum }')
             commit=$(git log -1 --format='%h')
-            echo '<br> <br> <br> \n' >> $GITHUB_STEP_SUMMARY
-            echo '### Pull Request Analysis! ⚠️' >> $GITHUB_STEP_SUMMARY
+            echo '<br> <br>' >> $GITHUB_STEP_SUMMARY
+            echo '### Pull Request Analysis' >> $GITHUB_STEP_SUMMARY
             echo "| Branch  | Author  | Files Changed | Files Removed  | Additions  | Deletions  | Commit  |" >> $GITHUB_STEP_SUMMARY
             echo "|:--------|:--------|:-------------:|:--------------:|:----------:|:----------:|:--------|" >> $GITHUB_STEP_SUMMARY
             echo "| $branch | $author | $changestotal | $files_removed | $additions | $deletions | $commit |" >> $GITHUB_STEP_SUMMARY
