@@ -8,6 +8,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  call-workflow:
+    uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml
   display:
       name: PR information
       runs-on: ubuntu-latest
