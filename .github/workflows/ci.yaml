@@ -39,7 +39,7 @@ jobs:
         uses: avides/actions-project-version-check@v1.4.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          file-to-check: ${{ matrix.branch }}_pom.xml
+          file-to-check: pom.xml
 
       - name: Exibir conteúdo do pom.xml
         run: |
