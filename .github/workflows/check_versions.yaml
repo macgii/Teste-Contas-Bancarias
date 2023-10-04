@@ -1,11 +1,7 @@
 name: continuos integration - verify version project
 
 on:
-  push:
-    branches:
-      - test-ci
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
 
 jobs:
   check_versions:
