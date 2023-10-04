@@ -19,16 +19,16 @@ jobs:
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
   build:
-    uses: .github/workflows/build.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/build.yaml@test-ci
   test:
-    uses: .github/workflows/test.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/test.yaml@test-ci
   coverage:
-    uses: .github/workflows/coverage.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/coverage.yaml@test-ci
   analysis:
-    uses: .github/workflows/analysis.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/analysis.yaml@test-ci
   docker_build:
-    uses: .github/workflows/build_docker.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/build_docker.yaml@test-ci
   publish:
-    uses: .github/workflows/publish_docker.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/publish_docker.yaml@test-ci
   check_versions:
-    uses: .github/workflows/check_versions.yaml@test-ci
+    uses: macgii/Teste-Contas-Bancarias/.github/workflows/check_versions.yaml@test-ci
