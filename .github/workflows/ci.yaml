@@ -39,20 +39,16 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           file-to-check: pom.xml
 
-      - name: Exibir conteúdo do pom.xml
-        run: |
-          git show ${{ matrix.branch }}:pom.xml
-
       - name: echo
         run: echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
 
       - name: Armazenar versões em variáveis
         run: |
-          if ${{ matrix.branch }} == main; then
-            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
+          if ${{ matrix.branch }} != main; then
+            atual_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           else
-            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
+            main_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
 
