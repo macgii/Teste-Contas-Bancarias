@@ -219,13 +219,15 @@ jobs:
             QUALITY_GATE_STATUS="Failed" >> $GITHUB_STEP_SUMMARY
           fi
 
-          echo "Quality Gate: $QUALITY_GATE_STATUS" >> $GITHUB_STEP_SUMMARY
-          echo "Reliability: $RELIABILITY" >> $GITHUB_STEP_SUMMARY
-          echo "Security: $SECURITY" >> $GITHUB_STEP_SUMMARY
-          echo "Maintainability: $MAINTAINABILITY" >> $GITHUB_STEP_SUMMARY
-          echo "Security Review: $SECURITY_REVIEW" >> $GITHUB_STEP_SUMMARY
-          echo "Coverage: $COVERAGE" >> $GITHUB_STEP_SUMMARY
-          echo "Duplications: $DUPLICATIONS" >> $GITHUB_STEP_SUMMARY
+          echo "| Métrica            | Status               |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------------------|----------------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality Gate       | $QUALITY_GATE_STATUS |" >> $GITHUB_STEP_SUMMARY
+          echo "| Reliability        | $RELIABILITY         |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security           | $SECURITY            |" >> $GITHUB_STEP_SUMMARY
+          echo "| Maintainability    | $MAINTAINABILITY     |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Review    | $SECURITY_REVIEW     |" >> $GITHUB_STEP_SUMMARY
+          echo "| Coverage           | $COVERAGE            |" >> $GITHUB_STEP_SUMMARY
+          echo "| Duplications       | $DUPLICATIONS        |" >> $GITHUB_STEP_SUMMARY
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
