@@ -29,6 +29,9 @@ jobs:
       - name: Add 'refs/heads/' prefix to matrix.branch
         run: echo "matrix_branch_with_prefix=refs/heads/${{ matrix.branch }}" >> $GITHUB_ENV
 
+      - name: ls
+        run: ls -a
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
