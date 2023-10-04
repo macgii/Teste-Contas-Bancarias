@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Project Version
-        uses: ./check_versions.yaml 
+        uses: ./workflows/check_versions.yaml 
 
   build:
     name: Build with Java
