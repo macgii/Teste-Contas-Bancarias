@@ -9,7 +9,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml
+    uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml@teste-ci
   display:
       name: PR information
       runs-on: ubuntu-latest
