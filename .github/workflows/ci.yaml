@@ -44,8 +44,11 @@ jobs:
           file-to-check: pom.xml
 
       - name: echo
-        run: echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
-
+        run: |
+          echo "matrix_branch_${{ matrix.branch }}"
+          echo "matrix_branch_with_prefix_${{ env.matrix_branch_with_prefix }}"
+          echo "github_ref_${{ env.matrix_branch_with_prefix }}"
+          
       - name: Armazenar versões em variáveis
         run: |
           if [ ${{ env.matrix_branch_with_prefix != github.ref }} ]; then
@@ -58,7 +61,6 @@ jobs:
 
       - name: echo
         run: |
-          echo "branch_${{ matrix.branch }}_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
           echo "MAIN_VERSION=${{ env.MAIN_VERSION }}"
           echo "ATUAL_VERSION=${{ env.ATUAL_VERSION }}"
 
