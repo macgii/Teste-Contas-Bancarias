@@ -1,0 +1,28 @@
+name: continuos integration - build project with docker
+
+on:
+  workflow_call:
+  
+jobs:
+  docker_build:
+    name: Run and Build with Docker
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Docker Listing Files and Directories with Detailed Information
+        run: ls -a
+
+      - name: Run and Build Containers
+        run: docker-compose up -d --build
+
+      - name: Show a List of Running Containers
+        run: docker ps
+
+      - name: Show a List of All Containers
+        run: docker ps -a
+      
+      - name: Show a List of All Images
+        run: docker images

@@ -8,304 +8,13 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  check_versions:
-    name: Project Version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check Project Version
-        run: ls -la
-      - name: Check Project Version
-        run: cd .github/workflows/
-      - name: Check Project Version
-        run: ls -la
-      
-      #- name: Check Project Version
-      #  uses: .github/workflows/check_versions.yaml 
-
-  build:
-    name: Build with Java
-    runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0.33
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: database
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h localhost"
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build with Maven
-        run: |
-          if mvn clean install -DskipTests; then
-            echo 'Build successful! 🚀' >> $GITHUB_STEP_SUMMARY
-          else
-            echo 'Build failed! ❌' >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-  test:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-    needs: build
-    services:
-      mysql:
-        image: mysql:8.0.33
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: database
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h localhost"
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Run Tests
-        run: mvn test 
-      
-      - name: Test Summary
-        uses: test-summary/action@v2
-        with:
-          paths: "target/**/TEST-*.xml"
-          output: test-summary.md 
-          show: "fail, skip, none"
-        
-      - name: Read and Append Test Summary
-        run: |
-          cat test-summary.md >> $GITHUB_STEP_SUMMARY
-        if: always()
-
-  coverage:
-    name: Coverage Tests
-    runs-on: ubuntu-latest
-    needs: test
-    services:
-      mysql:
-        image: mysql:8.0.33
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: database
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h localhost"
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Build with Maven and run tests
-        run: mvn clean verify
-
-      - name: Extract JaCoCo report
-        run: mvn jacoco:report
-        
-      - name: Verify Coverage
-        run: |
-          if mvn jacoco:check; then
-            echo 'Coveraged 80% per package successful! 🚀' >> $GITHUB_STEP_SUMMARY
-          else
-            echo '**Aviso:** Regra violada abaixo:' >> $GITHUB_STEP_SUMMARY
-            echo '**Taxa Mínima Esperada Por Pacote:**' >> $GITHUB_STEP_SUMMARY
-            echo '![Cobertura](https://progress-bar.dev/80/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-  analysis:
-    name: Analysis Quality Gate
-    runs-on: ubuntu-latest
-    needs: test
-    services:
-      mysql:
-        image: mysql:8.0.33
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: database
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h localhost"
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
-      
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      
-      - name: Build and analyze
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=macgii_Teste-Contas-Bancarias
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Install jq
-        run: |
-          sudo apt-get update
-          sudo apt-get install jq -y
-
-      - name: Extract Quality Gate information
-        run: |
-          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
-
-          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
-          RELIABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_reliability_rating").status')
-          SECURITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_rating").status')
-          MAINTAINABILITY=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_maintainability_rating").status')
-          SECURITY_REVIEW=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_security_hotspots_reviewed").status')
-          COVERAGE=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_coverage").status')
-          DUPLICATIONS=$(echo "$JSON" | jq -r '.projectStatus.conditions[] | select(.metricKey == "new_duplicated_lines_density").status')
-
-          if [ "$QUALITY_GATE_STATUS" == "OK" ]; then
-            QUALITY_GATE_STATUS="Passed" >> $GITHUB_STEP_SUMMARY
-          else
-            QUALITY_GATE_STATUS="Failed" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "| Métrica            | Status               |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------------------|----------------------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Quality Gate       | $QUALITY_GATE_STATUS |" >> $GITHUB_STEP_SUMMARY
-          echo "| Reliability        | $RELIABILITY         |" >> $GITHUB_STEP_SUMMARY
-          echo "| Security           | $SECURITY            |" >> $GITHUB_STEP_SUMMARY
-          echo "| Maintainability    | $MAINTAINABILITY     |" >> $GITHUB_STEP_SUMMARY
-          echo "| Security Review    | $SECURITY_REVIEW     |" >> $GITHUB_STEP_SUMMARY
-          echo "| Coverage           | $COVERAGE            |" >> $GITHUB_STEP_SUMMARY
-          echo "| Duplications       | $DUPLICATIONS        |" >> $GITHUB_STEP_SUMMARY
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Check Quality Gate Status and Metrics
-        run: |
-          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
-
-          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
-          METRICS_PASSED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "OK") | .metricKey) | join(", ")')
-          METRICS_FAILED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "ERROR") | .metricKey) | join(", ")')
-
-          if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
-            echo "Quality Gate failed. Status: $QUALITY_GATE_STATUS"
-            echo "Metrics Passed: $METRICS_PASSED"
-            echo "Metrics Failed: $METRICS_FAILED"
-            exit 1
-          else
-            echo "Quality Gate passed. Status: $QUALITY_GATE_STATUS"
-            echo "Metrics Passed: $METRICS_PASSED"
-            echo "Metrics Failed: $METRICS_FAILED"
-          fi
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  docker_build:
-    name: Run and Build with Docker
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Docker Listing Files and Directories with Detailed Information
-        run: ls -a
-
-      - name: Run and Build Containers
-        run: docker-compose up -d --build
-
-      - name: Show a List of Running Containers
-        run: docker ps
-
-      - name: Show a List of All Containers
-        run: docker ps -a
-      
-      - name: Show a List of All Images
-        run: docker images
-
-  deploy:
-    name: Deploy Dockerhub
-    runs-on: ubuntu-latest
-    needs: [analysis, coverage, docker_build, check_versions]
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Project Version check (Maven, NodeJS...)
-        uses: avides/actions-project-version-check@v1.4.0
-        id: actions_project_version_check
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          file-to-check: pom.xml
-
-      - name: use-version-from-check
-        run: echo "version=$(echo ${{ steps.actions_project_version_check.outputs.version }})" >> $GITHUB_ENV
-
-      - name: Set commit SHA
-        id: set-commit-sha
-        run: echo "commit_sha=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
-
-      - name: Build Image
-        run: docker-compose build
-
-      - name: Show a List of All Images
-        run: docker images
-
-      - name: Login Docker Hub
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} docker.io
-        
-      - name: Creating a Docker Image Tag "specific version"
-        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
-        
-      - name: Creating a Docker Image Tag "latest" 
-        run: docker tag api-contas-bancarias macgii/api-contas-bancarias:latest
-
-      - name: Show a List of All Images
-        run: docker images
-
-      - name: Push the image to Docker Hub "specific version"
-        run: docker push macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
-
-      - name: Push the image to Docker Hub "latest" 
-        run: docker push macgii/api-contas-bancarias:latest
-  
+  display:
+      name: PR information
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Check Project Version
+          uses: .github/workflows/git.yaml
   summary:
     name: Warning
     runs-on: ubuntu-latest
@@ -314,39 +23,53 @@ jobs:
         run: |
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
+  build:
+    name: Build with Java
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/build.yaml
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/test.yaml
+  coverage:
+    name: Coverage Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/coverage.yaml
+  analysis:
+    name: Analysis Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/analysis.yaml
+  docker_build:
+    name: Run and Build with Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/analysis.yaml
 
-  display:
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-
-        - name: Extract and Display Commit Info
-          run: |
-            echo "| Name               | Value                                |" >> $GITHUB_STEP_SUMMARY
-            echo "|--------------------|--------------------------------------|" >> $GITHUB_STEP_SUMMARY
-            echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Actor              | $GITHUB_ACTOR                        |" >> $GITHUB_STEP_SUMMARY
-            echo "| Commit SHA         | $GITHUB_SHA                          |" >> $GITHUB_STEP_SUMMARY
-            echo "| Event Name         | $GITHUB_EVENT_NAME                   |" >> $GITHUB_STEP_SUMMARY
-            echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
-
-        - name: Extract and Display Commit Info
-          run: |
-            branch=$(git rev-parse --abbrev-ref HEAD)
-            author=$(git log -1 --format='%an')
-            changes=$(git log -1 --format='%h %s' --numstat)
-            changestotal=$(echo "$changes" | wc -l)
-            files_removed=$(git log -1 --diff-filter=D --summary | grep 'delete mode' | wc -l)
-            additions=$(echo "$changes" | awk '{ sum += $1 } END { print sum }')
-            deletions=$(echo "$changes" | awk '{ sum += $2 } END { print sum }')
-            commit=$(git log -1 --format='%h')
-            echo '<br> <br>' >> $GITHUB_STEP_SUMMARY
-            echo '### Pull Request Analysis' >> $GITHUB_STEP_SUMMARY
-            echo "| Branch  | Author  | Files Changed | Files Removed  | Additions  | Deletions  | Commit  |" >> $GITHUB_STEP_SUMMARY
-            echo "|:--------|:--------|:-------------:|:--------------:|:----------:|:----------:|:--------|" >> $GITHUB_STEP_SUMMARY
-            echo "| $branch | $author | $changestotal | $files_removed | $additions | $deletions | $commit |" >> $GITHUB_STEP_SUMMARY
-
-          
-
+  publish:
+    name: Publish Image Dockerhub
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/publish_docker.yaml
+  check_versions:
+    name: Project Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Project Version
+        uses: .github/workflows/check_versions.yaml 

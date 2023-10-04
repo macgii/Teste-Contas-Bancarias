@@ -1,0 +1,38 @@
+name: continuos integration - PR information
+
+on:
+  workflow_call:
+  
+jobs: 
+  display:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Extract and Display Commit Info
+          run: |
+            echo "| Name               | Value                                |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------------------|--------------------------------------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Actor              | $GITHUB_ACTOR                        |" >> $GITHUB_STEP_SUMMARY
+            echo "| Commit SHA         | $GITHUB_SHA                          |" >> $GITHUB_STEP_SUMMARY
+            echo "| Event Name         | $GITHUB_EVENT_NAME                   |" >> $GITHUB_STEP_SUMMARY
+            echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
+
+        - name: Extract and Display Commit Info
+          run: |
+            branch=$(git rev-parse --abbrev-ref HEAD)
+            author=$(git log -1 --format='%an')
+            changes=$(git log -1 --format='%h %s' --numstat)
+            changestotal=$(echo "$changes" | wc -l)
+            files_removed=$(git log -1 --diff-filter=D --summary | grep 'delete mode' | wc -l)
+            additions=$(echo "$changes" | awk '{ sum += $1 } END { print sum }')
+            deletions=$(echo "$changes" | awk '{ sum += $2 } END { print sum }')
+            commit=$(git log -1 --format='%h')
+            echo '<br> <br>' >> $GITHUB_STEP_SUMMARY
+            echo '### Pull Request Analysis' >> $GITHUB_STEP_SUMMARY
+            echo "| Branch  | Author  | Files Changed | Files Removed  | Additions  | Deletions  | Commit  |" >> $GITHUB_STEP_SUMMARY
+            echo "|:--------|:--------|:-------------:|:--------------:|:----------:|:----------:|:--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| $branch | $author | $changestotal | $files_removed | $additions | $deletions | $commit |" >> $GITHUB_STEP_SUMMARY

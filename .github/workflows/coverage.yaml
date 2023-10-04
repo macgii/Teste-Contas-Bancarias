@@ -1,0 +1,46 @@
+name: continuos integration - coverage jacoco
+
+on:
+  workflow_call:
+
+jobs:
+  coverage:
+    name: Coverage Tests
+    runs-on: ubuntu-latest
+    needs: test
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: database
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping -h localhost"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: Build with Maven and run tests
+        run: mvn clean verify
+
+      - name: Extract JaCoCo report
+        run: mvn jacoco:report
+        
+      - name: Verify Coverage
+        run: |
+          if mvn jacoco:check; then
+            echo 'Coveraged 80% per package successful! 🚀' >> $GITHUB_STEP_SUMMARY
+          else
+            echo '**Aviso:** Regra violada abaixo:' >> $GITHUB_STEP_SUMMARY
+            echo '**Taxa Mínima Esperada Por Pacote:**' >> $GITHUB_STEP_SUMMARY
+            echo '![Cobertura](https://progress-bar.dev/80/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
