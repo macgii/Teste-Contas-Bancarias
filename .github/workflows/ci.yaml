@@ -13,8 +13,8 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v4
-        - name: Check Project Version
-          uses: .github/workflows/git.yaml
+
+        - uses: .github/workflows/git.yaml
   summary:
     name: Warning
     runs-on: ubuntu-latest
