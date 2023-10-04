@@ -12,7 +12,8 @@ jobs:
       name: PR information
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v4
+        - name: Summary
+          uses: actions/checkout@v4
 
         - name: Check Project Version
           run: cat .github/workflows/git.yaml
