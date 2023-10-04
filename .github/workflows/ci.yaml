@@ -8,10 +8,17 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  display:
+  workflow_reusable:
       name: PR information
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/git.yaml@test-ci
 
+  workflow_local:
+      name: Warning
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v4 # Necessary to access local action
+      - name: Local Action Call
+        uses: ./.github/actions/git.yaml 
   summary:
     name: Warning
     runs-on: ubuntu-latest
