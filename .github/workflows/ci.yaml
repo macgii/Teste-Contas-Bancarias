@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Project Version
-        uses: ./verify_version.yml 
+        uses: ./check_versions.yml 
 
   build:
     name: Build with Java
