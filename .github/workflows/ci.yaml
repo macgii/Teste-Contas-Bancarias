@@ -33,6 +33,11 @@ jobs:
           ref: ${{ matrix.branch }}
         if: ${{ matrix.branch != github.ref }}
 
+      - name: echodd
+        run: |
+          echo "branch=${{ matrix.branch }}"
+          echo "ref=${{ github.ref }}"
+
       - name: Verificar versão na branch ${{ matrix.branch }}
         id: actions_project_version_check
         uses: avides/actions-project-version-check@v1.4.0
@@ -47,10 +52,10 @@ jobs:
         run: |
           if ${{ matrix.branch }} != main; then
             atual_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
+            echo "ATUAL_VERSION=$${{ matrix.branch }}_version" >> $GITHUB_ENV
           else
             main_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
+            echo "MAIN_VERSION=$${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
 
   compare-versions:
