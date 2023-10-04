@@ -8,17 +8,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  workflow_reusable:
-      name: PR information
+  display:
       uses: macgii/Teste-Contas-Bancarias/.github/workflows/git.yaml@test-ci
-
-  workflow_local:
-      name: Warning
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v4 # Necessary to access local action
-      - name: Local Action Call
-        uses: .github/actions/git.yaml 
   summary:
     name: Warning
     runs-on: ubuntu-latest
@@ -27,3 +18,17 @@ jobs:
         run: |
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
+  build:
+    uses: .github/workflows/build.yaml
+  test:
+    uses: .github/workflows/test.yaml
+  coverage:
+    uses: .github/workflows/coverage.yaml
+  analysis:
+    uses: .github/workflows/analysis.yaml
+  docker_build:
+    uses: .github/workflows/build_docker.yaml
+  publish:
+    uses: .github/workflows/publish_docker.yaml
+  check_versions:
+    uses: .github/workflows/check_versions.yaml 
