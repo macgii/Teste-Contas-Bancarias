@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ matrix.branch }}
+          ref: ${{ github.ref }}
 
       - name: Verificar versão na branch ${{ matrix.branch }}
         id: actions_project_version_check
