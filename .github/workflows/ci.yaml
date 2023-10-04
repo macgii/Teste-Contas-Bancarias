@@ -40,7 +40,7 @@ jobs:
         id: actions_project_version_check
         uses: avides/actions-project-version-check@v1.4.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
           file-to-check: pom.xml
 
       - name: echo
