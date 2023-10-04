@@ -59,11 +59,11 @@ jobs:
       - name: Armazenar versões em variáveis
         run: |
           if ${{ matrix.branch }} == main; then
-            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION={{ matrix.branch }}_version" >> $GITHUB_ENV
+            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "MAIN_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           else
-            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "ATUAL_VERSION={{ matrix.branch }}_version" >> $GITHUB_ENV
+            ${{ matrix.branch }}_version="${{ steps.actions_project_version_check.outputs.version }}"
+            echo "ATUAL_VERSION=${{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
 
   compare-versions:
