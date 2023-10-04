@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check Project Version
-        uses: .github/workflows/analysis.yaml
+        uses: .github/workflows/build_docker.yaml
   publish:
     name: Publish Image Dockerhub
     runs-on: ubuntu-latest
