@@ -32,7 +32,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
-        if: ${{ matrix_branch_with_prefix != github.ref }}
+        if: ${{ env.matrix_branch_with_prefix != github.ref }}
 
       - name: echodd
         run: |
@@ -56,7 +56,7 @@ jobs:
             echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
           else
             main_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=$${{ matrix.branch }}_version" >> $GITHUB_ENV
+            echo "MAIN_VERSION=$main_version" >> $GITHUB_ENV
           fi
 
   compare-versions:
