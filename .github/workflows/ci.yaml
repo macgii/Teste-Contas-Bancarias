@@ -30,9 +30,9 @@ jobs:
       - name: Checkout codigo
         uses: actions/checkout@v3
 
-      - name: Salvar conteúdo do pom.xml em um novo arquivo
-        run: |
-          git show ${{ matrix.branch }}:pom.xml > ${{ matrix.branch }}_pom.xml
+      #- name: Salvar conteúdo do pom.xml em um novo arquivo
+      #  run: |
+      ##    git show ${{ matrix.branch }}:pom.xml > testpom.xml
 
       - name: Verificar versão na branch ${{ matrix.branch }}
         id: actions_project_version_check
