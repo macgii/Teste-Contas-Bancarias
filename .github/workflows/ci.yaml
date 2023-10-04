@@ -350,7 +350,7 @@ jobs:
             echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
             echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
 
-            echo "<br>" >> $GITHUB_STEP_SUMMARY
+            echo "<br><br>" >> $GITHUB_STEP_SUMMARY
 
             echo "| Author | Commits | Files Changed | Files Removed | Commit Message |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|---------|---------------|---------------|----------------|" >> $GITHUB_STEP_SUMMARY
