@@ -12,8 +12,15 @@ jobs:
     name: Project Version
     runs-on: ubuntu-latest
     steps:
+
       - name: Check Project Version
-        uses: ./workflows/check_versions.yaml 
+        run: ls -la
+      - name: Check Project Version
+        run: cd .github/workflows/
+      - name: Check Project Version
+        run: ls -la
+      - name: Check Project Version
+        uses: .github/workflows/check_versions.yaml 
 
   build:
     name: Build with Java
