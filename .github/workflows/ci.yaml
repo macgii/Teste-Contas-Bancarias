@@ -67,6 +67,7 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
           file-to-check: pom.xml
+          only-return-version: true
         continue-on-error: true
 
       - name: Versioning specifications
