@@ -350,6 +350,8 @@ jobs:
             echo "| Repository         | $GITHUB_REPOSITORY                   |" >> $GITHUB_STEP_SUMMARY
             echo "| Head Ref (PR)      | $GITHUB_HEAD_REF                     |" >> $GITHUB_STEP_SUMMARY
 
+            echo "<br>" >> $GITHUB_STEP_SUMMARY
+
             echo "| Author | Commits | Files Changed | Files Removed | Commit Message |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|---------|---------------|---------------|----------------|" >> $GITHUB_STEP_SUMMARY
             git log --format="| %an | %h | $(git diff --numstat HEAD~1 HEAD | awk '{filesChanged+=$1; removed+=$2} END {print filesChanged, removed}')" --abbrev-commit --stat --no-merges >> $GITHUB_STEP_SUMMARY
