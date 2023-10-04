@@ -15,7 +15,7 @@ jobs:
         - uses: actions/checkout@v4
 
         - name: Check Project Version
-          run: .github/workflows/git.yaml
+          run: cat .github/workflows/git.yaml
   summary:
     name: Warning
     runs-on: ubuntu-latest
