@@ -10,7 +10,7 @@ on:
 jobs:
   display:
       name: PR information
-      uses: macgii/Teste-Contas-Bancarias/blob/test-ci/.github/workflows/git.yaml
+      uses: macgii/Teste-Contas-Bancarias/.github/workflows/git.yaml@test-ci
 
   summary:
     name: Warning
