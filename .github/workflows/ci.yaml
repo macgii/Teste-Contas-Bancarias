@@ -31,8 +31,9 @@ jobs:
       - name: Armazenar versões em variáveis
         run: |
           if [ "${{ matrix.branch }}" == "main" ]; then
-            echo "### Branch Scan - ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-            echo "MAIN_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+            echo | Branch Scan   | Project Version | >> $GITHUB_STEP_SUMMARY
+            echo | :------------ | :-------------: | >> $GITHUB_STEP_SUMMARY
+            echo | ${{ github.ref_name }}| {{ steps.actions_project_version_check.outputs.version }} | >> $GITHUB_STEP_SUMMARY
           else
             echo "### Branch Scan - ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
             echo "CURRENT_VERSION=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_STEP_SUMMARY
@@ -155,6 +156,7 @@ jobs:
             echo '**Taxa Mínima Esperada Por Pacote:**' >> $GITHUB_STEP_SUMMARY
             echo '![Cobertura](https://progress-bar.dev/90/?scale=100&title=Coverage%20&width=200&suffix=%)' >> $GITHUB_STEP_SUMMARY
             exit 1
+          fi
 
   analysis:
     name: Analysis Quality Gate
