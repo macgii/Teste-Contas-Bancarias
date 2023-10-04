@@ -52,7 +52,7 @@ jobs:
         run: |
           if ${{ matrix.branch }} != main; then
             atual_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "ATUAL_VERSION=$${{ matrix.branch }}_version" >> $GITHUB_ENV
+            echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
           else
             main_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "MAIN_VERSION=$${{ matrix.branch }}_version" >> $GITHUB_ENV
