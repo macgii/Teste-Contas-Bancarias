@@ -28,10 +28,13 @@ jobs:
 
 
     steps:
+      - name: Add 'refs/heads/' prefix to matrix.branch
+        run: echo "matrix_branch_with_prefix=refs/heads/${{ matrix.branch }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ matrix.branch }}
-        if: ${{ 'refs/heads/' + matrix.branch != github.ref }}
+        if: ${{ matrix_branch_with_prefix != github.ref }}
 
       - name: echodd
         run: |
