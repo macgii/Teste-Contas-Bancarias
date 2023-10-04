@@ -23,8 +23,9 @@ jobs:
     strategy:
       matrix:
         branch:
-          - main
           - teste-ci
+          - main
+
 
     steps:
 
