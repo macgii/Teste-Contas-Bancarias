@@ -58,12 +58,12 @@ jobs:
 
       - name: Armazenar versões em variáveis
         run: |
-          if ${{ matrix.branch }} == $GITHUB_REF; then
+          if ${{ matrix.branch }} == main; then
             $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
+            echo "MAIN_VERSION={{ matrix.branch }}_version" >> $GITHUB_ENV
           else
             $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "DEVELOP_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
+            echo "ATUAL_VERSION={{ matrix.branch }}_version" >> $GITHUB_ENV
           fi
 
   compare-versions:
@@ -74,16 +74,16 @@ jobs:
       - name: Comparar versões e tomar ação
         run: |
           main_version="${{ env.MAIN_VERSION }}"
-          develop_version="${{ env.DEVELOP_VERSION }}"
+          atual_version="${{ env.ATUAL_VERSION }}"
           
-          if [ "$main_version" == "$develop_version" ]; then
-            echo "As versões em main ($main_version) e develop ($develop_version) são iguais."
+          if [ "$main_version" == "$atual_version" ]; then
+            echo "As versões em main ($main_version) e develop ($atual_version) são iguais."
             # Adicione ação aqui se as versões forem iguais
-          elif [ "$main_version" \> "$develop_version" ]; then
-            echo "A versão em main ($main_version) é maior do que em develop ($develop_version)."
+          elif [ "$main_version" \> "$atual_version" ]; then
+            echo "A versão em main ($main_version) é maior do que em develop ($atual_version)."
             # Adicione ação aqui se a versão em main for maior
           else
-            echo "A versão em develop ($develop_version) é maior do que em main ($main_version)."
+            echo "A versão em develop ($atual_version) é maior do que em main ($main_version)."
             # Adicione ação aqui se a versão em develop for maior
           fi
 
