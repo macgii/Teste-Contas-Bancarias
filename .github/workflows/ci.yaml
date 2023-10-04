@@ -23,10 +23,8 @@ jobs:
     strategy:
       matrix:
         branch:
+          - main
           - test-ci
-          - test-ci
-
-
     steps:
       - name: Add 'refs/heads/' prefix to matrix.branch
         run: echo "matrix_branch_with_prefix=refs/heads/${{ matrix.branch }}" >> $GITHUB_ENV
@@ -53,7 +51,7 @@ jobs:
 
       - name: Armazenar versões em variáveis
         run: |
-          if ${{ matrix.branch }} != main; then
+          if [ ${{ matrix.branch }} != "main" ]; then
             atual_version="${{ steps.actions_project_version_check.outputs.version }}"
             echo "ATUAL_VERSION=$atual_version" >> $GITHUB_ENV
           else
