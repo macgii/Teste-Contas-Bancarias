@@ -37,18 +37,24 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           file-to-check: pom.xml
 
-      - name: Armazenar versão da branch ${{ matrix.branch }}
-        run: echo "branch_$GITHUB_REF_version=${{ steps.actions_project_version_check.outputs.version }}" >> $GITHUB_ENV
+  trocar-para-develop:
+    runs-on: ubuntu-latest
 
-      - name: Armazenar versões em variáveis
+    steps:
+      - name: Check out código
+        uses: actions/checkout@v2
+      
+      - name: mostrar pom.xml
         run: |
-          if ${{ matrix.branch }} == $GITHUB_REF; then
-            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "MAIN_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
-          else
-            $GITHUB_REF_version="${{ steps.actions_project_version_check.outputs.version }}"
-            echo "DEVELOP_VERSION=$GITHUB_REF_version" >> $GITHUB_ENV
-          fi
+          cat pom.xml
+
+      - name: Trocar para a branch develop
+        run: |
+          git checkout main
+
+      - name: mostrar pom.xml
+        run: |
+          cat pom.xml
 
   compare-versions:
     needs: check_versions
