@@ -8,19 +8,20 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  call-workflow:
-    uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml@teste-ci
   display:
       name: PR information
       runs-on: ubuntu-latest
       steps:
+
+        
         - name: Summary
           uses: actions/checkout@v4
 
         - name: Check Project Version
           run: cat .github/workflows/git.yaml
 
-        - uses: ./.github/workflows/git.yaml
+        - name: Summary
+          uses: macgii/teste-contas-bancarias/.github/workflows/git.yaml@teste-ci
   summary:
     name: Warning
     runs-on: ubuntu-latest
