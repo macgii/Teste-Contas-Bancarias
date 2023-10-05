@@ -16,42 +16,47 @@ rule_files:
 
 scrape_configs:
 
-  - job_name: "prometheus80"
+  - job_name: "app"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["contas-bancarias.onrender.com:443"]
+        labels:
+         application: "contas"
+    scheme: https
+
+  - job_name: "app80"
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["contas-bancarias.onrender.com:8080"]
         labels:
          application: "contas"
-         
-  - job_name: "prometheus90"
+    scheme: https
+      
+  - job_name: "app90"
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["contas-bancarias.onrender.com:9090"]
         labels:
          application: "contas"
-         
-  - job_name: "prometheus433https"
+    scheme: https
+             
+  - job_name: "app"
     metrics_path: "/actuator/prometheus"
     static_configs:
-      - targets: ["contas-bancarias.onrender.com:433"]
+      - targets: ["contas-bancarias.onrender.com"]
         labels:
          application: "contas"        
-         
-  - job_name: "contas90"
+    scheme: https
+             
+  - job_name: "prometheus90"
     static_configs:
       - targets: ["host.docker.internal:9090"]
 
-         
-  - job_name: "contas80"
-    metrics_path: "/actuator/prometheus"
+  - job_name: "prometheus80"
     static_configs:
       - targets: ["host.docker.internal:8080"]
-        labels:
-         application: "contas"
 
   - job_name: 'docker'
-         # metrics_path defaults to '/metrics'
-         # scheme defaults to 'http'.
     static_configs:
       - targets: ['localhost:9323']         
          
