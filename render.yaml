@@ -1,7 +1,8 @@
 version: 1
 
 services:
-  - name: prometheus
+  - type: web
+    name: prometheus
     plan: free
     env: production
     start_command: ["prometheus", "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus"]
@@ -10,7 +11,8 @@ services:
       - name: http
         port: 9090
 
-  - name: app
+  - type: web
+    name: app
     plan: free
     env: production
     start_command: ["java", "-jar", "app.jar"]
