@@ -61,6 +61,7 @@ jobs:
 
   test:
     name: Unit Tests
+    needs: build
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -99,6 +100,7 @@ jobs:
 
   coverage:
     name: Coverage Tests
+    needs: test
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -139,6 +141,7 @@ jobs:
 
   analysis:
     name: Analysis Quality Gate
+    needs: test
     runs-on: ubuntu-latest
     services:
       mysql:
