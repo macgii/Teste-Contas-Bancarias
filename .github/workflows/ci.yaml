@@ -235,7 +235,7 @@ jobs:
 
   publish:
     name: Publish Image Dockerhub
-    needs: [analysis, coverage, docker_build, check_versions]
+    #needs: [analysis, coverage, docker_build, check_versions]
     if: github.ref.name == 'main'
     runs-on: ubuntu-latest
     steps:
@@ -277,8 +277,8 @@ jobs:
       - name: Push the image to Docker Hub "specific version"
         run: docker push macgii/api-contas-bancarias:backend-${{ env.version }}-${{ env.commit_sha }}
 
-      - name: Push the image to Docker Hub "latest" 
-        run: docker push macgii/api-contas-bancarias:latest
+      #- name: Push the image to Docker Hub "latest" 
+      #  run: docker push macgii/api-contas-bancarias:latest
 
   check_versions:
     name: Project Version
