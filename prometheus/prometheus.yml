@@ -2,10 +2,16 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: "contas"
+  - job_name: "prometheus"
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["host.docker.internal:8080"]
         labels:
          application: "contas"
          job: "contas"
+         
+remote_write:
+- url: https://prometheus-prod-40-prod-sa-east-1.grafana.net/api/prom/push
+  basic_auth:
+    username: "1220584"
+    password: glc_eyJvIjoiOTU5MjUwIiwibiI6InN0YWNrLTc1NjM2Ni1obS13cml0ZS1wcm9tZXRoZXVzLXB1Ymxpc2hlciIsImsiOiIweGkydG1Db3o2NWtwNjQ1M3E5WHE5aVEiLCJtIjp7InIiOiJwcm9kLXNhLWVhc3QtMSJ9fQ==
