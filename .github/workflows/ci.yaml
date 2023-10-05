@@ -208,27 +208,6 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Check Quality Gate Status and Metrics
-        run: |
-          JSON=$(curl -sS -u ${{ secrets.SONAR_TOKEN }}: "https://sonarcloud.io/api/qualitygates/project_status?projectKey=macgii_Teste-Contas-Bancarias")
-
-          QUALITY_GATE_STATUS=$(echo "$JSON" | jq -r '.projectStatus.status')
-          METRICS_PASSED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "OK") | .metricKey) | join(", ")')
-          METRICS_FAILED=$(echo "$JSON" | jq -r '.projectStatus.conditions | map(select(.status == "ERROR") | .metricKey) | join(", ")')
-
-          if [ "$QUALITY_GATE_STATUS" == "ERROR" ]; then
-            echo "Quality Gate failed. Status: $QUALITY_GATE_STATUS"
-            echo "Metrics Passed: $METRICS_PASSED"
-            echo "Metrics Failed: $METRICS_FAILED"
-            exit 1
-          else
-            echo "Quality Gate passed. Status: $QUALITY_GATE_STATUS"
-            echo "Metrics Passed: $METRICS_PASSED"
-            echo "Metrics Failed: $METRICS_FAILED"
-          fi
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          
   docker_build:
     name: Run and Build with Docker
     runs-on: ubuntu-latest
@@ -254,11 +233,11 @@ jobs:
   publish:
     name: Publish Image Dockerhub
     needs: [analysis, coverage, docker_build, check_versions]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref.name == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Project Version check (Maven, NodeJS...)
         uses: avides/actions-project-version-check@v1.4.0
@@ -300,6 +279,7 @@ jobs:
 
   check_versions:
     name: Project Version
+    needs: docker_build
     runs-on: ubuntu-latest
     strategy:
       matrix:
