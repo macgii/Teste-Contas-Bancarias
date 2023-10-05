@@ -235,8 +235,8 @@ jobs:
 
   publish:
     name: Publish Image Dockerhub
-    #needs: [analysis, coverage, docker_build, check_versions]
-    if: github.ref.name == 'main'
+    needs: [analysis, coverage, docker_build, check_versions]
+    #if: github.ref.name == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
