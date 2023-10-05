@@ -23,8 +23,6 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
           file-to-check: pom.xml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Armazenar versões em variáveis
         run: |
