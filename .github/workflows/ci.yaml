@@ -17,6 +17,9 @@ jobs:
     steps:
       - name: Summary
         run: |
+          echo "O valor do segredo GIT_TOKEN é: ${{ secrets.GIT_TOKEN }}"
+      - name: Summary
+        run: |
           echo '### Fique atento em caso de erro em qualquer job! ⚠️' >> $GITHUB_STEP_SUMMARY
           echo 'Além disso, por favor, verifique minuciosamente os logs dentro do job. 📝💻' >> $GITHUB_STEP_SUMMARY
   build:
